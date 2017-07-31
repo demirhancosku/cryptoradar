@@ -7,6 +7,7 @@
 ## Usage
 
 ## Todo List
+See [GitHub Projects](https://github.com/demirhancosku/ETH-Trader-CEX.io/projects) for more.
 
 ## License
 
