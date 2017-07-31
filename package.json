@@ -1,21 +1,21 @@
 {
-  "name": "nodejs-todo-api",
+  "name": "ETH-Trader-CEX.io",
   "version": "0.0.1",
-  "description": "Nodejs Todo Api based on microservices architecture and mq service bus",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/demirhancosku/nodejs-todo-api.git"
+    "url": "git+https://github.com/demirhancosku/ETH-Trader-CEX.io"
   },
   "author": "Coşku Demirhan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/demirhancosku/nodejs-todo-api/issues"
+    "url": "https://github.com/demirhancosku/ETH-Trader-CEX.io/issues"
   },
-  "homepage": "https://github.com/demirhancosku/nodejs-todo-api#readme",
+  "homepage": "https://github.com/demirhancosku/ETH-Trader-CEX.io#readme",
   "dependencies": {
     "bcrypt": "^1.0.2",
     "jsonwebtoken": "^7.4.1",
