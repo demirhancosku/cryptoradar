@@ -4,9 +4,9 @@
 "use strict";
 
 module.exports = {
-    server: "vagrant.dev",
-    database: "ether",
-    user: "root",
-    password: "rhythm",
+    server: "localhost",
+    database: "db_name",
+    user: "user_name",
+    password: "password",
     dialect: "mysql"
 };

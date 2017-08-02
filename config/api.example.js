@@ -4,9 +4,7 @@
 "use strict";
 
 module.exports = {
-    market: {
-        key: "",
-        token: ""
-    },
-    env: "dev"
-};
+    server: "API",
+    secret_key: "acayipgizlitoken",
+    port: 3000
+}

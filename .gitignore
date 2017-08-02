@@ -107,3 +107,6 @@ fabric.properties
 .idea/
 package-lock.json
 yarn.lock
+/config/db.js
+/config/app.js
+/config/api.js

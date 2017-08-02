@@ -3,17 +3,28 @@
  */
 
 "use strict";
-const config = require('../../config'),
-    Sequelize = require('sequelize');
+const config = require("../../config"),
+    Sequelize = require("sequelize");
 
-const orm = new Sequelize(config.db.database, config.db.user, config.db.password,{
-    dialect : 'mysql',
+// Default options for Sequelize
+let options = {
+    dialect: config.db.dialect,
     define: {
-        timestamps: false
-    }
-});
+        timestamps: true
+    },
+    host: config.db.server
+};
 
-//Quick Migration
-orm.query("CREATE TABLE IF NOT EXISTS example (id INTEGER PRIMARY KEY, some_integer INTEGER, some_string TEXT, is_active BOOLEAN, timestamp DATE)");
+// Enable logging options for Sequelize if the env mode is dev
+if (config.app.env === "dev") {
+
+    options.logging = function (str) {
+        console.log(str);
+    }
+}
+
+//Create orm object
+const orm = new Sequelize(config.db.database, config.db.user, config.db.password, options);
+
 
 module.exports = [Sequelize, orm];

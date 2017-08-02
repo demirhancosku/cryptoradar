@@ -50,6 +50,5 @@ routes.init.example();
 
 global.server.listen(config.api.port, () => {
     console.log("server up");
-
 });
 
