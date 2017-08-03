@@ -11,10 +11,10 @@ let init = {}
 
 const routePath = path.join(__dirname);
 
-fs.readdirSync(routePath).forEach(function (file) {
-    if(file !== 'index.js')
-        init[file.replace('Routes.js','')] = require("./" + file);
+fs.readdirSync(routePath).forEach((file) => {
+    if (file !== 'index.js')
+        init[file.replace('Routes.js', '')] = require("./" + file);
 });
 
 
-module.exports = {init:init};
+module.exports = {init: init};

@@ -18,7 +18,7 @@ let options = {
 // Enable logging options for Sequelize if the env mode is dev
 if (config.app.env === "dev") {
 
-    options.logging = function (str) {
+    options.logging = (str) => {
         console.log(str);
     }
 }

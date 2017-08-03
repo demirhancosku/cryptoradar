@@ -13,7 +13,7 @@ async function migrate() {
     return true;
 }
 
-migrate().then(function () {
+migrate().then(() => {
     process.exit();
 })
 
