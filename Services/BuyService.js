@@ -7,13 +7,13 @@ const BaseService = require('./BaseService'),
       PromiseBased = require("./Strategies/PromiseBased"),
       TimeSeries = require("timeseries-analysis");
 
-class ExampleService extends BaseService {
+class BuyService extends BaseService {
 
     constructor() {
         super();
     }
 
-    static run() {
+    static run(resource,data) {
        const promiseBasedBuyStrategy = new PromiseBased("buy");
 
         let data = [21,20,17,16,14,13,11,10,9,10,11];
@@ -31,4 +31,4 @@ class ExampleService extends BaseService {
 
 }
 
-ExampleService.run();
+module.exports = BuyService;
