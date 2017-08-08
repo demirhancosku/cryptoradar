@@ -14,14 +14,13 @@ class BuyService extends BaseService {
     }
 
     static run(resource,data) {
-       const promiseBasedBuyStrategy = new PromiseBased("buy");
 
-        let data = [21,20,17,16,14,13,11,10,9,10,11];
+       const promiseBasedBuyStrategy = new PromiseBased("buy");
 
         promiseBasedBuyStrategy.update(
             {
                 timeseries: new TimeSeries.main(TimeSeries.adapter.fromArray(data)),
-                waveLength: 5,
+                waveLength: resource.wave_length,
                 lastPrice : data[data.length -1]
 
             });
