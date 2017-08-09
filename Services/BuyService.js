@@ -16,7 +16,7 @@ class BuyService extends BaseService {
         this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("buy")});
     }
 
-    update(resource,data,lastPrice){
+    update(resource,prices,lastPrice){
 
         for(let strategy of this.strategies){
 
@@ -24,9 +24,12 @@ class BuyService extends BaseService {
 
                 strategy.class.update(
                     {
-                        timeseries: new TimeSeries.main(TimeSeries.adapter.fromArray(data)),
+                        timeseries: new TimeSeries.main(TimeSeries.adapter.fromDB(prices,{
+                            date:   'timestamp',
+                            value:  'ask'
+                        })),
                         waveLength: resource.wave_length,
-                        lastPrice : lastPrice
+                        lastPrice : lastPrice.ask
 
                     });
 
@@ -34,7 +37,6 @@ class BuyService extends BaseService {
             }
 
         }
-
 
     }
 

@@ -16,6 +16,8 @@ class Mean extends Indicator{
 
         const mean = selectedArea.mean();
 
+        this.log('Mean: '+ mean);
+
         if(this.isUp){
             return this.lastPrice > mean;
         }else{
@@ -34,6 +36,8 @@ class Mean extends Indicator{
         this.waveLength = data.waveLength;
         this.lastPrice = data.lastPrice;
 
+        this.log('Wave Lenght: '+ this.waveLength);
+        this.log('Last Price: '+ this.lastPrice);
     }
 
     advice(){

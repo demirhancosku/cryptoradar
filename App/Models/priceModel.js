@@ -11,6 +11,7 @@ const Prices = orm.define('prices', {
         primaryKey: true
     },
     symbol: Sequelize.STRING,
+    timestamp: Sequelize.INTEGER,
     ask: Sequelize.FLOAT,
     bid: Sequelize.FLOAT,
 },{
