@@ -4,12 +4,36 @@
 
 "use strict";
 const [Sequelize,orm] = require('./db');
+const BalanceModel = require('./balanceModel');
+const StrategyModel = require('./strategyModel');
 
-const Account = orm.define('resources', {
-    id: Sequelize.INTEGER,
-    balance_id: Sequelize.INTEGER,
-    buy_strategy_id: Sequelize.INTEGER,
-    sell_strategy_id: Sequelize.INTEGER,
+
+const Resource = orm.define('resources', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
+    balance_id: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: BalanceModel,
+            key: 'id',
+        }
+    },
+    buy_strategy_id: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: StrategyModel,
+            key: 'id',
+        }
+    },
+    sell_strategy_id: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: StrategyModel,
+            key: 'id',
+        }
+    },
     title: Sequelize.STRING,
     amount: Sequelize.FLOAT,
     status: Sequelize.BOOLEAN,
@@ -21,6 +45,28 @@ const Account = orm.define('resources', {
     forecast_count: Sequelize.INTEGER,
     sell_margin: Sequelize.FLOAT,
     buy_margin: Sequelize.FLOAT
+},{
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
+    scopes: {
+        buyStrategy: {
+            include: [
+                {
+                    model: StrategyModel
+                }
+            ]
+        },
+        sellStrategy: {
+            include: [
+                {
+                    model: StrategyModel
+                }
+            ]
+        }
+    }
 });
 
-module.exports = Account;
+Resource.belongsTo(StrategyModel, { as: 'buyStrategy', foreignKey: 'buy_strategy_id'});
+Resource.belongsTo(StrategyModel, { as: 'sellStrategy', foreignKey: 'sell_strategy_id'});
+
+module.exports = Resource;

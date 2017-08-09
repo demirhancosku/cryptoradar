@@ -5,11 +5,17 @@
 "use strict";
 const [Sequelize,orm] = require('./db');
 
-const Account = orm.define('markets', {
-    id: Sequelize.INTEGER,
+const Markets = orm.define('markets', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
     title: Sequelize.STRING,
     status: Sequelize.BOOLEAN,
     transaction_fee: Sequelize.FLOAT
+},{
+    updatedAt: 'updated_at',
+    createdAt: 'created_at'
 });
 
-module.exports = Account;
+module.exports = Markets;

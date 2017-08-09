@@ -17,12 +17,14 @@ let options = {
 
 // Enable logging options for Sequelize if the env mode is dev
 if (config.app.env === "dev") {
-
     options.logging = (str) => {
         console.log(str);
     }
 }
-
+else{
+    options.logging = (str) => {
+    }
+}
 //Create orm object
 const orm = new Sequelize(config.db.database, config.db.user, config.db.password, options);
 

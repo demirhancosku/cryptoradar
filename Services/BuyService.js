@@ -11,19 +11,31 @@ class BuyService extends BaseService {
 
     constructor() {
         super();
-        this.promiseBasedBuyStrategy = new PromiseBased("buy");
+
+        this.strategies = [];
+        this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("buy")});
     }
 
     update(resource,data,lastPrice){
-        this.promiseBasedBuyStrategy.update(
-            {
-                timeseries: new TimeSeries.main(TimeSeries.adapter.fromArray(data)),
-                waveLength: resource.wave_length,
-                lastPrice : lastPrice
 
-            });
+        for(let strategy of this.strategies){
 
-        console.log(this.promiseBasedBuyStrategy.check());
+            if(strategy.class_name === resource.buyStrategy.class_name){
+
+                strategy.class.update(
+                    {
+                        timeseries: new TimeSeries.main(TimeSeries.adapter.fromArray(data)),
+                        waveLength: resource.wave_length,
+                        lastPrice : lastPrice
+
+                    });
+
+                return strategy.class.check();
+            }
+
+        }
+
+
     }
 
 }
