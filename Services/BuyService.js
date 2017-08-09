@@ -11,21 +11,19 @@ class BuyService extends BaseService {
 
     constructor() {
         super();
+        this.promiseBasedBuyStrategy = new PromiseBased("buy");
     }
 
-    static run(resource,data) {
-
-       const promiseBasedBuyStrategy = new PromiseBased("buy");
-
-        promiseBasedBuyStrategy.update(
+    update(resource,data,lastPrice){
+        this.promiseBasedBuyStrategy.update(
             {
                 timeseries: new TimeSeries.main(TimeSeries.adapter.fromArray(data)),
                 waveLength: resource.wave_length,
-                lastPrice : data[data.length -1]
+                lastPrice : lastPrice
 
             });
 
-        console.log(promiseBasedBuyStrategy.check());
+        console.log(this.promiseBasedBuyStrategy.check());
     }
 
 }

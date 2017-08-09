@@ -1,10 +1,6 @@
 'use strict';
 
 const config = require('./config'),
-    routes = require('./App/Routes'),
-    restify = require('restify'),
-    jwt = require('jsonwebtoken'),
-    ErrorResponse = require('./App/Responses/ErrorResponse'),
     BuyService = require('./Services/BuyService');
 
 
@@ -20,4 +16,8 @@ let resource = {
     wave_length:5
 };
 
-BuyService.run(resource,data);
+const buyService = new BuyService();
+
+
+
+buyService.update(resource,data,data[data.length -1]);
