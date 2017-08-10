@@ -4,7 +4,8 @@
 
 "use strict";
 const config = require("../../config"),
-    Sequelize = require("sequelize");
+    Sequelize = require("sequelize"),
+    colors = require("colors/safe");
 
 // Default options for Sequelize
 let options = {
@@ -18,7 +19,7 @@ let options = {
 // Enable logging options for Sequelize if the env mode is dev
 if (config.app.env === "dev") {
     options.logging = (str) => {
-        console.log(str);
+        console.log(colors.red(str));
     }
 }
 else{

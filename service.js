@@ -3,85 +3,106 @@
 const config = require('./config'),
     BuyService = require('./Services/BuyService'),
     AccountsModel = require('./App/Models/accountModel'),
+    BalanceModel = require('./App/Models/balanceModel'),
+    ResourceModel = require('./App/Models/resourceModel'),
+    StrategyModel = require('./App/Models/strategyModel'),
     PriceModel = require('./App/Models/priceModel');
 
 const buyService = new BuyService();
 
 async function init() {
 
-    //Getting active accounts with balances
-    let accounts = await AccountsModel.scope(['balances', 'active']).findAll();
+    //Getting active accounts with balances and their resources and strategies
+    let accounts = await AccountsModel.scope(['balances', 'active']).findAll({
+        include: [
+            {
+                model: BalanceModel,
+                where: {status: 1},
+                include: [{
+                    model: ResourceModel,
+                    where: {status: 1},
+                    include: [
+                        {
+                            model: StrategyModel,
+                            as: 'buyStrategy'
+                        },
+                        {
+                            model: StrategyModel,
+                            as: 'sellStrategy'
+                        }
+                    ]
+                }]
+            }
+        ]
+    });
 
 
-    //Collect all balances in a array
-    let balances = [];
-
-    for (let account of accounts) {
-        balances = balances.concat(account.balances);
-    }
-
-
-    //collect all resources releted with balances
-    let resources = [];
-
-    for (let balance of balances) {
-        resources = resources.concat(await balance.getResources());
-    }
-
-    for (let i in resources) {
-        resources[i].buyStrategy = await resources[i].getBuyStrategy();
-        resources[i].sellStrategy = await resources[i].getSellStrategy();
-    }
-
-    console.log(resources);
 
     //getting price history order by timestamps
-    const prices = await PriceModel.scope('ether').findAll({
+    let prices = await PriceModel.scope('ether').findAll({
         limit: 10000,
         order: [
             ['timestamp', 'DESC']
         ]
     });
 
-    return [accounts, balances, resources, prices];
+    //Get Plain Objects into prices
+    prices = prices.map((price) => price.get({plain: true}));
+
+    return [accounts, prices];
 }
 
 
-async function router(accounts, balances, resources, prices) {
+async function router(accounts, prices) {
 
-    for(let resource of resources){
+    // We will check all active accounts
+    for (let account of accounts) {
 
-        switch(resource.final_state) {
-            case 'open':
+        //Balances associated with account
+        for(let balance of account.balances){
 
-                buyService.update(resource, prices, prices[prices.length - 1]);
+            //Resources associated with balances
+            for(let resource of balance.resources){
 
-                break;
-            case 'close':
-                //do nothing
-                break;
-            default:
+                switch (resource.final_state) {
+                    case 'open':
+
+                        buyService.update(resource, prices, prices[prices.length - 1]);
+
+                        break;
+                    case 'close':
+                        //do nothing
+                        break;
+                    default:
+                }
+
+               process.exit(0);
+            }
+
         }
+
     }
 
 }
 
 
 async function run() {
-    //firstly we will get accountsi balances, resources and prices data
-    let [accounts, balances, resources, prices] = await init();
+    //firstly we will get accounts balances, resources and prices data
+    let [accounts,  prices] = await init();
 
     // then we'll pass all data to Router method. Router method redirects resources to relevant function.
-    await router(accounts, balances, resources, prices);
+    await router(accounts, prices);
 
 }
 
-run().then(() => {
 
+setInterval(() => {
+    run()
+        .then(() => {
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}, 5000);
 
-    process.exit(0);
-}).catch((err) => {
-    console.log(err);
-    process.exit(0);
-});
 
