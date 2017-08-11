@@ -44,8 +44,22 @@ class DeepPeakPromise extends Indicator{
             }
         }
 
+        //Secong middle point is the secont half's middle point of a wave: x/2 + x/6
+        let second_middle_point = Math.round(this.resource.wave_length * 4 / 6);
+        let middle_point_arrange = Math.floor(this.resource.wave_length / 12);
+
+        //First point of search area
+        let first_point = parseInt(second_middle_point - middle_point_arrange);
+
+
+
+        //Last point of seach area
+        let last_point = parseInt(second_middle_point + middle_point_arrange);
+
+
+
         //If key is near middle of wave(near deep/peak positions) we can say that a peak/deep promised
-        return Math.abs(Math.floor(this.resource.wave_length / 2) - key) < Math.round(this.resource.wave_length /4);
+        return first_point < key && last_point > key;
     }
 
     update(data){

@@ -51,12 +51,13 @@ async function init() {
     let prices = await PriceModel.scope('ether').findAll({
         limit: 10000,
         order: [
-            ['timestamp', 'DESC']
+            ['created_at', 'DESC']
         ]
     });
 
     //Get Plain Objects into prices
     prices = prices.map((price) => price.get({plain: true}));
+
 
     return [accounts, prices];
 }
@@ -189,7 +190,7 @@ async function run() {
         console.log('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
         setTimeout(() => {
             run();
-        }, 10000 - execution_time);
+        }, Math.abs(10000 - execution_time));
     });
 
 
