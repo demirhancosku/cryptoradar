@@ -12,7 +12,7 @@ class BuyService extends BaseService {
     constructor() {
         super();
 
-        //Collection of strategies related to buy.
+        //Collection of strategies related to buy action
         this.strategies = [];
         this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("buy")});
     }

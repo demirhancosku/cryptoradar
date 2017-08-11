@@ -15,7 +15,7 @@ const buyService = new BuyService();
 
 async function init() {
 
-    //Getting active accounts with balances and their resources and strategies
+    //Getting active accounts with balances and their resources and buy/sell strategies
     let accounts = await AccountsModel.scope(['active']).findAll({
         include: [
             {
@@ -47,7 +47,7 @@ async function init() {
     });
 
 
-    //getting price history order by timestamps
+    //Getting price history, order by timestamp
     let prices = await PriceModel.scope('ether').findAll({
         limit: 10000,
         order: [
@@ -62,6 +62,8 @@ async function init() {
 }
 
 function selectMarket(balance) {
+
+    //Find markey by balance's market_id property
     return _.findWhere(Markets, {id: balance.market_id.toString()});
 }
 
@@ -114,23 +116,26 @@ async function router(accounts, prices) {
 
 async function buy(market, symbol, resource, prices, last_price) {
 
+    //Get advice for buy action
     let advice = buyService.update(resource, prices, last_price);
 
     console.log(advice);
+
     //to prevent spontaneously buy action
     advice = false;
-    if(advice){
+    if (advice) {
 
-        // calculating buy price
+        //Calculating buy price
         let buyPrice = parseFloat(resource.amount * last_price);
 
         // Adding transaction fee
         buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
 
 
-        //send buy request to market
+        //Send buy request to market
         let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
 
+        //If buy request returns error
         if (result.error !== undefined) {
             console.log('ERROR');
             console.log(result);
@@ -165,22 +170,32 @@ function stop() {
 }
 
 async function run() {
-    //firstly we will get accounts balances, resources and prices data
+    //run start date for calculating execution time
+    let run_start = +new Date();
+
+    //Firstly we will get accounts balances, resources and prices data
     let [accounts, prices] = await init();
 
-    // then we'll pass all data to Router method. Router method redirects resources to relevant function.
-    await router(accounts, prices);
+    //Then we'll pass all data to Router method. Router method redirects resources to relevant function.
+    //If routing completed run again
+    router(accounts, prices).then(() => {
+
+        //run stop date
+        let run_completed = +new Date();
+
+        //We will execute run again after 10 second including this one's execution time
+        let execution_time = run_completed - run_start;
+
+        console.log('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
+        setTimeout(() => {
+            run();
+        }, 10000 - execution_time);
+    });
+
 
 }
 
 
-setInterval(() => {
-    run()
-        .then(() => {
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}, 5000);
+run();
 
 

@@ -6,17 +6,21 @@ class Mean extends Indicator {
     constructor(way) {
         super();
 
+        //To define calculations way; it is up for sell, down for buy action
         this.isUp = way === "up";
     }
 
     calculate() {
 
-        const selectedArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length * 2));
+        //We get last wave data for calculating mean
+        const selectedArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length));
 
+        //Mean calculation
         const mean = selectedArea.mean();
 
         this.log('Mean: ' + mean);
 
+        //If its a buy action (down) last price must be smaller than mean, if not (up) last price must be bigger than mean
         if (this.isUp) {
             return this.lastPrice > mean;
         } else {
@@ -26,10 +30,6 @@ class Mean extends Indicator {
     }
 
     update(data) {
-
-        if (Math.abs(data.waveLength % 2) === 0) {
-            this.log("Wave Lenght must be odd");
-        }
 
         this.timeseries = data.timeseries;
         this.resource = data.resource;
