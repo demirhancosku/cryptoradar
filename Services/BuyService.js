@@ -4,8 +4,8 @@
 
 "use strict";
 const BaseService = require('./BaseService'),
-      PromiseBased = require("./Strategies/PromiseBased"),
-      TimeSeries = require("timeseries-analysis");
+    PromiseBased = require("./Strategies/PromiseBased"),
+    TimeSeries = require("timeseries-analysis");
 
 class BuyService extends BaseService {
 
@@ -17,20 +17,19 @@ class BuyService extends BaseService {
         this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("buy")});
     }
 
-    update(resource,prices,lastPrice){
+    update(resource, prices, lastPrice) {
+        for (let strategy of this.strategies) {
 
-        for(let strategy of this.strategies){
-
-            if(strategy.class_name === resource.buyStrategy.class_name){
+            if (strategy.class_name === resource.buyStrategy.class_name) {
 
                 strategy.class.update(
                     {
-                        timeseries: new TimeSeries.main(TimeSeries.adapter.fromDB(prices,{
-                            date:   'timestamp',
-                            value:  'ask'
+                        resource: resource,
+                        timeseries: new TimeSeries.main(TimeSeries.adapter.fromDB(prices, {
+                            date: 'created_at',
+                            value: 'ask'
                         })),
-                        waveLength: resource.wave_length,
-                        lastPrice : lastPrice.ask
+                        lastPrice: lastPrice
 
                     });
 

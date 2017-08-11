@@ -3,9 +3,9 @@
  */
 
 "use strict";
-const [Sequelize,orm] = require('./db');
+const [Sequelize,orm,prefix] = require('./db');
 
-const Prices = orm.define('prices', {
+const Prices = orm.define(prefix+'prices', {
     id:{
         type: Sequelize.INTEGER,
         primaryKey: true
@@ -20,12 +20,12 @@ const Prices = orm.define('prices', {
     scopes: {
         ether: {
             where: {
-                symbol: 'ETH'
+                symbol: 'ETH/USD'
             }
         },
         bitcoin: {
             where: {
-                symbol: 'BTC'
+                symbol: 'BTC/USD'
             }
         }
     }

@@ -3,9 +3,9 @@
  */
 
 "use strict";
-const [Sequelize,orm] = require('./db');
+const [Sequelize,orm,prefix] = require('./db');
 
-const Strategies = orm.define('strategies', {
+const Strategies = orm.define(prefix+'strategies', {
     id:{
         type: Sequelize.INTEGER,
         primaryKey: true

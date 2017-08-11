@@ -3,10 +3,10 @@
  */
 
 "use strict";
-const [Sequelize, orm] = require('./db');
+const [Sequelize, orm, prefix] = require('./db');
 const BalanceModel = require('./balanceModel');
 
-const Account = orm.define('accounts', {
+const Account = orm.define(prefix+'accounts', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true
@@ -18,16 +18,6 @@ const Account = orm.define('accounts', {
     updatedAt: 'updated_at',
     createdAt: 'created_at',
     scopes: {
-        balances: {
-            include: [
-                {
-                    model: BalanceModel,
-                    where: {
-                        status: 1
-                    }
-                }
-            ]
-        },
         active: {
             where: {
                 is_active: 1
@@ -36,5 +26,5 @@ const Account = orm.define('accounts', {
     }
 });
 
-Account.hasMany(BalanceModel, {foreignKey: 'account_id'});
+Account.hasMany(BalanceModel, {foreignKey: 'account_id', as: 'balances'});
 module.exports = Account;

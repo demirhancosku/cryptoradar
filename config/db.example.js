@@ -8,5 +8,6 @@ module.exports = {
     database: "db_name",
     user: "user_name",
     password: "password",
-    dialect: "mysql"
+    dialect: "mysql",
+    prefix: "_"
 };

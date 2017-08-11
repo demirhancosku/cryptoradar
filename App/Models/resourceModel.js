@@ -3,12 +3,12 @@
  */
 
 "use strict";
-const [Sequelize,orm] = require('./db');
+const [Sequelize,orm,prefix] = require('./db');
 const BalanceModel = require('./balanceModel');
 const StrategyModel = require('./strategyModel');
 
 
-const Resource = orm.define('resources', {
+const Resource = orm.define(prefix+'resources', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true

@@ -12,7 +12,11 @@ class DeepPeakPromise extends Indicator{
 
     calculate(){
 
-        const smoothedSeries = this.timeseries.smoother({period:Math.floor(this.waveLength /3)}).data.slice(- this.waveLength);
+        this.timeseries.dsp_itrend({
+            alpha: this.resource.trend_alpha
+        });
+
+        const smoothedSeries = this.timeseries.smoother({period:this.resource.smooth_period}).data.slice(- this.resource.wave_length);
         const selectedArea = new TimeSeries.main(smoothedSeries);
 
         const rawValues = selectedArea.data;
@@ -33,17 +37,17 @@ class DeepPeakPromise extends Indicator{
             }
         }
 
-        return Math.abs(Math.floor(this.waveLength / 2) - key) < Math.round(this.waveLength /4);
+        return Math.abs(Math.floor(this.resource.wave_length / 2) - key) < Math.round(this.resource.wave_length /4);
     }
 
     update(data){
+        this.resource = data.resource;
+        this.timeseries = data.timeseries;
 
-        if(Math.abs(data.waveLength % 2) === 0){
+
+        if(Math.abs(this.resource.wave_length % 2) === 0){
             this.log("Wave Lenght must be odd");
         }
-
-        this.timeseries = data.timeseries;
-        this.waveLength = data.waveLength;
     }
 
     advice(){

@@ -4,9 +4,10 @@
 "use strict";
 
 module.exports = {
-    server: "vagrant.dev",
+    server: "ethereum.csoauholwq8f.eu-central-1.rds.amazonaws.com",
     database: "ether",
-    user: "root",
-    password: "rhythm",
-    dialect: "mysql"
+    user: "eren",
+    password: "NeverEren",
+    dialect: "mysql",
+    prefix: "_"
 };

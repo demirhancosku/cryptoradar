@@ -1,4 +1,5 @@
-const config = require("../../config");
+const config = require("../../config"),
+    colors = require("colors/safe");
 
 class Indicator {
 
@@ -9,7 +10,7 @@ class Indicator {
     log(str) {
         if (config.app.env === "dev") {
 
-            console.log(str);
+            console.log(colors.blue(str));
         }
     }
 

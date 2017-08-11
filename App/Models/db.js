@@ -29,5 +29,6 @@ else{
 //Create orm object
 const orm = new Sequelize(config.db.database, config.db.user, config.db.password, options);
 
+const prefix = config.db.prefix;
 
-module.exports = [Sequelize, orm];
+module.exports = [Sequelize, orm, prefix];
