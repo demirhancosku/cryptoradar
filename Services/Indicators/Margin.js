@@ -1,4 +1,4 @@
-const Indicator = require("./indicator");
+const Indicator = require("./Indicator");
 
 class Margin extends Indicator {
 

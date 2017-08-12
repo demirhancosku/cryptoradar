@@ -1,4 +1,4 @@
-const Indicator = require("./indicator"),
+const Indicator = require("./Indicator"),
     TimeSeries = require("timeseries-analysis");
 
 class Mean extends Indicator {
