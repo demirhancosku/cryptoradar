@@ -9,7 +9,8 @@ const config = require('./config'),
     ResourceModel = require('./App/Models/resourceModel'),
     MarketModel = require('./App/Models/marketModel'),
     StrategyModel = require('./App/Models/strategyModel'),
-    PriceModel = require('./App/Models/priceModel');
+    PriceModel = require('./App/Models/priceModel'),
+    Logger = require('./App/Utils/Logger');
 
 const buyService = new BuyService();
 
@@ -73,6 +74,7 @@ async function router(accounts, prices) {
     // We will check all active accounts
     for (let account of accounts) {
 
+
         //Balances associated with account
         for (let balance of account.balances) {
 
@@ -93,7 +95,7 @@ async function router(accounts, prices) {
 
                 switch (resource.final_state) {
                     case 'buy':
-                        await buy(market, balance.symbol, resource, prices, lastPrices.ask);
+                        await buy(account, market, balance.symbol, resource, prices, lastPrices.ask);
                         break;
 
                     case 'sell':
@@ -115,12 +117,13 @@ async function router(accounts, prices) {
 
 }
 
-async function buy(market, symbol, resource, prices, last_price) {
+async function buy(account, market, symbol, resource, prices, last_price) {
 
     //Get advice for buy action
     let advice = buyService.update(resource, prices, last_price);
 
-    console.log(advice);
+    if(advice)
+    Logger.buy(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH aldım.', account);
 
     //to prevent spontaneously buy action
     advice = false;
@@ -187,7 +190,7 @@ async function run() {
         //We will execute run again after 10 second including this one's execution time
         let execution_time = run_completed - run_start;
 
-        console.log('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
+        Logger.info('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
         setTimeout(() => {
             run();
         }, Math.abs(10000 - execution_time));
