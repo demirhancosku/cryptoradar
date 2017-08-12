@@ -125,9 +125,6 @@ async function buy(account, market, symbol, resource, prices, last_price) {
     let advice = buyService.update(resource, prices, last_price);
 
 
-    if (advice)
-        Logger.buy(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH aldım.', account);
-
     //buy if advice is true
     if (advice) {
 
@@ -141,8 +138,14 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
 
         //Send buy request to market
-        //to prevent spontaneously buy action
-        //let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
+        //to prevent accident buy action
+        if (config.app.env !== "simulation" && config.app.env !== "dev"){
+            let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
+        }else{
+            let result = {
+                error : 'Buy action in debug mode'
+            }
+        }
 
         //If buy request returns error
         if (result.error !== undefined) {
@@ -166,14 +169,11 @@ async function buy(account, market, symbol, resource, prices, last_price) {
 
 }
 
-function sell(account, market, symbol, resource, prices, last_price) {
+async function sell(account, market, symbol, resource, prices, last_price) {
 
     //Get advice for sell action
     let advice = sellService.update(resource, prices, last_price);
 
-
-    if (advice)
-        Logger.sell(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH sattım.', account);
 
     //sell if advice is true
     if (advice) {
@@ -188,10 +188,17 @@ function sell(account, market, symbol, resource, prices, last_price) {
         Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
 
         //Send sell request to market
-        //to prevent spontaneously sell action
-        //let result = await market.class.buy_sell('sell', resource.amount, symbol);
+        //to prevent accident sell action
+        if (config.app.env !== "simulation" && config.app.env !== "dev"){
+            let result = await market.class.buy_sell('sell', resource.amount, symbol);
+        }else{
+            let result = {
+                error : 'Sell action in debug mode'
+            }
+        }
 
-        //If buy request returns error
+
+        //If sell request return error
         if (result.error !== undefined) {
             Logger.error("Something went wrong during the sale.", account, result);
         } else {
