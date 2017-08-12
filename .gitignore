@@ -112,3 +112,4 @@ yarn.lock
 /config/api.js
 .DS_Store
 .emojirc
+/config/message.js

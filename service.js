@@ -49,14 +49,14 @@ async function init() {
 
     //Getting price history, order by timestamp
     let prices = await PriceModel.scope('ether').findAll({
-        limit: 10000,
+        limit: 500,
         order: [
             ['created_at', 'DESC']
         ]
     });
 
     //Get Plain Objects into prices
-    prices = prices.map((price) => price.get({plain: true}));
+    prices = prices.map((price) => price.get({plain: true})).reverse();
 
 
     return [accounts, prices];

@@ -1,3 +1,5 @@
+"use strict";
+
 const Strategy = require("./Strategy"),
       DeepPeakPromise = require("../Indicators/DeepPeakPromise"),
       Mean = require("../Indicators/Mean");
