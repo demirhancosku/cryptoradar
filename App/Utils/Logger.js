@@ -4,14 +4,14 @@ const config = require("../../config"),
     Telegram = require("./Telegram");
 
 
-class Logger{
+class Logger {
 
-    static bot(account){
+    static bot(account) {
 
-        if(this.bots === undefined)
+        if (this.bots === undefined)
             this.bots = [];
 
-        if(this.bots[account.id] === undefined){
+        if (this.bots[account.id] === undefined) {
             this.bots[account.id] = new Telegram(account);
             //this.bots[account.id].listenForUser();
         }
@@ -19,13 +19,13 @@ class Logger{
         return this.bots[account.id];
     }
 
-    static isDev(){
+    static isDev() {
         return config.app.env === "dev";
     }
 
-    static error(str,account){
+    static error(str, account) {
 
-        if(this.isDev())
+        if (this.isDev())
             console.log(str);
 
 
@@ -35,29 +35,31 @@ class Logger{
         this.bot(account).sendMessage(str);
     }
 
-    static db(str,account){
-        if(this.isDev())
-            console.log(Colors.yellow(str));
+    static db(str, account) {
+        this.devlog(str, 'yellow');
+
     }
 
-    static buy(str,account){
-        if(this.isDev())
-            console.log(Colors.green(str));
+    static buy(str, account) {
+        this.devlog(str, 'green');
 
         this.bot(account).sendMessage(str);
     }
 
-    static sell(str,account){
-        if(this.isDev())
-            console.log(Colors.red(str));
+    static sell(str, account) {
+        this.devlog(str, 'red');
 
         this.bot(account).sendMessage(str);
     }
 
-    static info(str){
-        if(this.isDev())
-            console.log(Colors.blue(str));
+    static info(str) {
+        this.devlog(str, 'blue');
 
+    }
+
+    static devlog(str, color) {
+        if (this.isDev())
+            console.log(Colors[color](str));
     }
 }
 
