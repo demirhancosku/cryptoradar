@@ -14,6 +14,9 @@ const Account = orm.define(prefix+'accounts', {
     username: Sequelize.STRING,
     password: Sequelize.STRING,
     is_active: Sequelize.BOOLEAN,
+    telegram_on: Sequelize.BOOLEAN,
+    bot_key: Sequelize.STRING,
+    chat_id: Sequelize.INTEGER,
 }, {
     updatedAt: 'updated_at',
     createdAt: 'created_at',

@@ -5,8 +5,6 @@ const config = require("../../config"),
 
 class Logger{
 
-    constructor() {
-    }
 
     isDev(){
         return config.app.env === "dev";
