@@ -8,5 +8,5 @@ module.exports = {
         key: "",
         token: ""
     },
-    env: "dev"
+    env: "simulation"
 };

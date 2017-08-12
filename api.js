@@ -5,7 +5,8 @@ const config = require('./config'),
     restify = require('restify'),
     jwt = require('jsonwebtoken'),
     ErrorResponse = require('./App/Responses/ErrorResponse'),
-    ExampleService = require('./Services/ExampleService');
+    ExampleService = require('./Services/ExampleService'),
+    Logger = require("./App/Utils/Logger");
 
 
 /**
@@ -49,6 +50,6 @@ routes.init.example();
 
 
 global.server.listen(config.api.port, () => {
-    console.log("server up");
+    Logger.info("server is up");
 });
 

@@ -19,17 +19,13 @@ class Logger {
         return this.bots[account.id];
     }
 
-    static isDev() {
-        return config.app.env === "dev";
-    }
 
     static error(str, account, data) {
 
-        if (this.isDev()){
-            this.devlog(str, 'red');
-            this.devlog(data, 'pink');
-        }
+        this.devlog(str, 'red');
+        this.devlog(data, 'pink');
 
+        this.simulationlog(str, 'red');
 
         //TODO: File log will be here
 
@@ -38,28 +34,37 @@ class Logger {
 
     static db(str, account) {
         this.devlog(str, 'yellow');
-
     }
 
     static buy(str, account) {
         this.devlog(str, 'green');
-
+        this.simulationlog(str, 'green');
         this.bot(account).sendMessage(str);
     }
 
     static sell(str, account) {
         this.devlog(str, 'red');
-
+        this.simulationlog(str, 'red');
         this.bot(account).sendMessage(str);
     }
 
     static info(str) {
         this.devlog(str, 'blue');
+        this.simulationlog(str, 'blue');
 
     }
 
+
+
+
+
     static devlog(str, color) {
-        if (this.isDev())
+        if (config.app.env === "dev")
+            console.log(Colors[color](str));
+    }
+
+    static simulationlog(str, color) {
+        if (config.app.env === "simulation")
             console.log(Colors[color](str));
     }
 }

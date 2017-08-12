@@ -4,6 +4,7 @@ const config = require('./config'),
     _ = require('underscore'),
     Markets = require('./Services/Markets/Markets'),
     BuyService = require('./Services/BuyService'),
+    SellService = require('./Services/SellService'),
     AccountsModel = require('./App/Models/accountModel'),
     BalanceModel = require('./App/Models/balanceModel'),
     ResourceModel = require('./App/Models/resourceModel'),
@@ -13,6 +14,7 @@ const config = require('./config'),
     Logger = require('./App/Utils/Logger');
 
 const buyService = new BuyService();
+const sellService = new SellService();
 
 async function init() {
 
@@ -99,7 +101,7 @@ async function router(accounts, prices) {
                         break;
 
                     case 'sell':
-
+                        await sell(account, market, balance.symbol, resource, prices, lastPrices.bid);
                         break;
 
                     case 'close':
@@ -156,7 +158,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            //Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
 
         }
 
@@ -164,8 +166,50 @@ async function buy(account, market, symbol, resource, prices, last_price) {
 
 }
 
-function sell() {
+function sell(account, market, symbol, resource, prices, last_price) {
 
+    //Get advice for sell action
+    let advice = sellService.update(resource, prices, last_price);
+
+
+    if (advice)
+        Logger.sell(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH sattım.', account);
+
+    //sell if advice is true
+    if (advice) {
+
+        //Calculating sell price
+        let sellPrice = parseFloat(resource.amount * last_price);
+
+        // Adding transaction fee
+        sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
+
+
+        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+
+        //Send sell request to market
+        //to prevent spontaneously sell action
+        //let result = await market.class.buy_sell('sell', resource.amount, symbol);
+
+        //If buy request returns error
+        if (result.error !== undefined) {
+            Logger.error("Something went wrong during the sale.", account, result);
+        } else {
+
+            //TODO: Market log
+            //TODO: Update resource
+            /**
+             *  amount: result.symbol1Amount / 1000000
+             *  order_id: result.id
+             *  timestamp: result.time / 1000
+             */
+
+
+            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+
+        }
+
+    }
 }
 
 function stop() {
@@ -191,10 +235,10 @@ async function run() {
 
         Logger.info('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
         setTimeout(() => {
+            Logger.info('\n');
             run();
         }, Math.abs(10000 - execution_time));
     });
-
 
 }
 
