@@ -23,15 +23,16 @@ class Logger {
         return config.app.env === "dev";
     }
 
-    static error(str, account) {
+    static error(str, account, data) {
 
-        if (this.isDev())
-            console.log(str);
+        if (this.isDev()){
+            this.devlog(str, 'red');
+            this.devlog(data, 'pink');
+        }
 
 
         //TODO: File log will be here
 
-        //
         this.bot(account).sendMessage(str);
     }
 

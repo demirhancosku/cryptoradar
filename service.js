@@ -122,11 +122,11 @@ async function buy(account, market, symbol, resource, prices, last_price) {
     //Get advice for buy action
     let advice = buyService.update(resource, prices, last_price);
 
-    if(advice)
-    Logger.buy(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH aldım.', account);
 
-    //to prevent spontaneously buy action
-    advice = false;
+    if (advice)
+        Logger.buy(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH aldım.', account);
+
+    //buy if advice is true
     if (advice) {
 
         //Calculating buy price
@@ -136,20 +136,16 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
 
 
+        Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+
         //Send buy request to market
-        let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
+        //to prevent spontaneously buy action
+        //let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
 
         //If buy request returns error
         if (result.error !== undefined) {
-            console.log('ERROR');
-            console.log(result);
-
-            console.log(resource.title + ' kaynağı ile ' + last_price + '$ dan ' + resource.amount + ' ETH almaya çalışırken bir sorun oluştu.');
-
+            Logger.error("Something went wrong during the purchase.", account, result);
         } else {
-            console.log(result);
-            console.log('buy', buyPrice.toFixed(2), symbol);
-
 
             //TODO: Market log
             //TODO: Update resource
@@ -158,6 +154,9 @@ async function buy(account, market, symbol, resource, prices, last_price) {
              *  order_id: result.id
              *  timestamp: result.time / 1000
              */
+
+
+            //Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
 
         }
 
