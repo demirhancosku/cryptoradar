@@ -13,6 +13,18 @@ class Indicator {
         }
     }
 
+    update() {
+
+    }
+
+    calculate(){
+
+    }
+
+    advice(){
+
+    }
+
 }
 
 module.exports = Indicator;

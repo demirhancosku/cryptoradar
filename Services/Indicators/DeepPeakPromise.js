@@ -39,7 +39,7 @@ class DeepPeakPromise extends Indicator{
     update(data){
 
         if(Math.abs(data.waveLength % 2) === 0){
-            this.log("Wave Lenght must be odd");
+            this.log("Wave Length must be odd");
         }
 
         this.timeseries = data.timeseries;

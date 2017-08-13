@@ -4,7 +4,7 @@
 
 "use strict";
 
-const SuccesResponse = require('../Responses/SuccessResponse');
+const SuccessResponse = require('../Responses/SuccessResponse');
 
 module.exports = () => {
 
@@ -18,7 +18,7 @@ module.exports = () => {
          *  TEST RESPONSE
          * @type {SuccessResponse}
          */
-        let res = new SuccesResponse(response);
+        let res = new SuccessResponse(response);
         res.fill({'t':'d'});
         res.send();
 

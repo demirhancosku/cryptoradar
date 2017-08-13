@@ -27,7 +27,7 @@ class Mean extends Indicator{
     update(data){
 
         if(Math.abs(data.waveLength % 2) === 0){
-            this.log("Wave Lenght must be odd");
+            this.log("Wave Length must be odd");
         }
 
         this.timeseries = data.timeseries;
@@ -38,7 +38,7 @@ class Mean extends Indicator{
 
     advice(){
         let advice = this.calculate();
-        this.log("Last price is " + (this.isUp? "bigger": "smaller") + " than mean:" + (advice? " possitive" : " negative"));
+        this.log("Last price is " + (this.isUp? "bigger": "smaller") + " than mean:" + (advice? " positive" : " negative"));
         return advice;
     }
 
