@@ -1,4 +1,5 @@
-const config = require("../../config");
+const config = require("../../config"),
+    Logger = require("../../App/Utils/Logger");
 
 class Indicator {
 
@@ -7,10 +8,7 @@ class Indicator {
     }
 
     log(str) {
-        if (config.app.env === "dev") {
-
-            console.log(str);
-        }
+        Logger.info(str);
     }
 
     update() {

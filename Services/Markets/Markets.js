@@ -3,18 +3,19 @@
  */
 
 "use strict";
+
 const fs = require('fs'),
     path = require('path');
 
-
-let init = {}
-
 const routePath = path.join(__dirname);
+let markets = [];
 
 fs.readdirSync(routePath).forEach((file) => {
-    if (file !== 'index.js')
-        init[file.replace('Routes.js', '')] = require("./" + file);
+    if (file !== 'Markets.js')
+        markets.push({id: file.split("-")[0], class: require("./" + file)});
 });
 
 
-module.exports = {init: init};
+
+
+module.exports = markets;

@@ -110,3 +110,6 @@ yarn.lock
 /config/db.js
 /config/app.js
 /config/api.js
+.DS_Store
+.emojirc
+/config/message.js

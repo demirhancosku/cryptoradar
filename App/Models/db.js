@@ -4,7 +4,8 @@
 
 "use strict";
 const config = require("../../config"),
-    Sequelize = require("sequelize");
+    Sequelize = require("sequelize"),
+    Logger = require("../Utils/Logger");
 
 // Default options for Sequelize
 let options = {
@@ -15,16 +16,13 @@ let options = {
     host: config.db.server
 };
 
-// Enable logging options for Sequelize if the env mode is dev
-if (config.app.env === "dev") {
-
-    options.logging = function (str) {
-        console.log(str);
-    }
+options.logging = (str) => {
+    Logger.db(str);
 }
 
 //Create orm object
 const orm = new Sequelize(config.db.database, config.db.user, config.db.password, options);
 
+const prefix = config.db.prefix;
 
-module.exports = [Sequelize, orm];
+module.exports = [Sequelize, orm, prefix];
