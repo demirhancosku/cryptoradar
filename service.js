@@ -153,7 +153,12 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         } else {
 
             //TODO: Market log
-            //TODO: Update resource
+            resource.update({
+                final_price: buyPrice,
+                final_state: 'sell',
+                amount: result.symbol1Amount / 1000000
+            });
+
             /**
              *  amount: result.symbol1Amount / 1000000
              *  order_id: result.id
@@ -203,6 +208,10 @@ async function sell(account, market, symbol, resource, prices, last_price) {
             Logger.error("Something went wrong during the sale.", account, result);
         } else {
 
+            resource.update({
+                final_price: sellPrice,
+                final_state: 'buy'
+            });
             //TODO: Market log
             //TODO: Update resource
             /**
