@@ -243,7 +243,11 @@ async function run() {
         Logger.info('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
         setTimeout(() => {
             Logger.info('\n');
-            run();
+            try {
+                run();
+            } catch (error) {
+                console.error(error)
+            }
         }, Math.abs(10000 - execution_time));
     });
 
