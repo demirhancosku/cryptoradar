@@ -143,7 +143,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
             let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
         }else{
             let result = {
-                error : 'Buy action in debug mode'
+                symbol1Amount: 0.1
             }
         }
 
@@ -198,7 +198,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
             let result = await market.class.buy_sell('sell', resource.amount, symbol);
         }else{
             let result = {
-                error : 'Sell action in debug mode'
+                symbol1Amount: 0.1
             }
         }
 
