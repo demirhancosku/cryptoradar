@@ -4,9 +4,5 @@
 "use strict";
 
 module.exports = {
-    market: {
-        key: "",
-        token: ""
-    },
     env: "dev"
 };
