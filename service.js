@@ -166,7 +166,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
@@ -190,7 +190,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
 
 
-        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$",account);
 
         //Send sell request to market
         //to prevent accident sell action
