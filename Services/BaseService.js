@@ -10,10 +10,6 @@ class BaseService {
 
     }
 
-    init(){
-
-    }
-
 }
 
 module.exports = BaseService;
