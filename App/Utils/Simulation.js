@@ -9,14 +9,18 @@ class Simulation {
         return config.app.env === "simulation";
     }
 
-    static buy() {
-
+    static buy(market) {
+        //TODO: Fill markets normalizer with correct data
         if(this.isSimulation()){
 
         }
     }
 
-    static sell() {
+    static sell(market) {
+        //TODO: Fill markets normalizer with correct data
+        if(this.isSimulation()){
+
+        }
     }
 }
 

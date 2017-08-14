@@ -170,7 +170,12 @@ class Cexio {
         param.type = type;
         param.order_type = 'market';
         param.amount = amount;
-        return this.api_call('place_order', param, 1, couple)
+        return this.api_call('place_order', param, 1, couple);
+        //TODO: response normalizer and exception check will be here
+    }
+
+    normalizer(response_type,data){
+        //TODO: response normalizer, fills a structured response for givin data input and returns back, provides compatibility for multiple markets on services
     }
 
     convert(amount, couple) {
@@ -181,7 +186,7 @@ class Cexio {
 
     async lastPrices(symbol) {
         let result = await this.api_call('ticker', {}, 0, symbol);
-
+        //TODO: response normalizer
         return {ask: result.ask, bid: result.bid}
     }
 }
