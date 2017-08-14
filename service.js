@@ -52,7 +52,7 @@ async function init() {
 
     //Getting price history, order by timestamp
     let prices = await PriceModel.scope('ether').findAll({
-        limit: 500,
+        limit: 1000,
         order: [
             ['created_at', 'DESC']
         ]
