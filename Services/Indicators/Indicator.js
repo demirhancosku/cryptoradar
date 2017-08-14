@@ -11,18 +11,6 @@ class Indicator {
         Logger.info(str);
     }
 
-    update() {
-
-    }
-
-    calculate(){
-
-    }
-
-    advice(){
-
-    }
-
 }
 
 module.exports = Indicator;
