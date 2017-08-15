@@ -139,10 +139,12 @@ async function buy(account, market, symbol, resource, prices, last_price) {
 
         //Send buy request to market
         //to prevent accident buy action
-        if (config.app.env !== "simulation" && config.app.env !== "dev"){
-            let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
-        }else{
-            let result = await market.class.simulate_buy('buy', buyPrice.toFixed(2), symbol);
+        let result = {'error': true};
+
+        if (config.app.env !== "simulation" && config.app.env !== "dev") {
+            result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
+        } else {
+            result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol);
         }
 
         //If buy request returns error
@@ -164,7 +166,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
@@ -188,14 +190,16 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
 
 
-        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$",account);
+        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         //Send sell request to market
         //to prevent accident sell action
-        if (config.app.env !== "simulation" && config.app.env !== "dev"){
-            let result = await market.class.buy_sell('sell', resource.amount, symbol);
-        }else{
-            let result = market.class.simulate_buy_sell('sell', resource.amount, symbol);
+        let result = {'error': true};
+
+        if (config.app.env !== "simulation" && config.app.env !== "dev") {
+            result = await market.class.buy_sell('sell', resource.amount, symbol);
+        } else {
+            result = market.class.simulate_buy_sell('sell', resource.amount, symbol);
         }
 
 
@@ -204,12 +208,13 @@ async function sell(account, market, symbol, resource, prices, last_price) {
             Logger.error("Something went wrong during the sale.", account, result);
         } else {
 
+
+            //TODO: Market log
+            //TODO: Update resource
             resource.update({
                 final_price: sellPrice,
                 final_state: 'buy'
             });
-            //TODO: Market log
-            //TODO: Update resource
             /**
              *  amount:
              *  order_id:
@@ -217,7 +222,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 

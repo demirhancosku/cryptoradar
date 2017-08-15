@@ -174,7 +174,7 @@ class Cexio {
         return this.normalizer(type, result);
     }
 
-    normalizer(type, data){
+    normalizer(type, data) {
 
         if (data.error !== undefined) {
             return {'error': true};
@@ -193,13 +193,15 @@ class Cexio {
 
     simulate_buy_sell(type, amount, couple) {
 
+        //TODO: simulate buy/sell will be check
         if (type === 'buy') {
             return {
-                'error' : false,
-                'amount' : amount
+                'amount': amount
             }
         } else {
-
+            return {
+                'amount': amount
+            }
         }
     }
 
