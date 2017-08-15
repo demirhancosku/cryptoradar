@@ -165,17 +165,42 @@ class Cexio {
         return this.api_call('place_order', param, 1, couple)
     }
 
-    buy_sell(type, amount, couple) {
+    async buy_sell(type, amount, couple) {
         let param = {};
         param.type = type;
         param.order_type = 'market';
         param.amount = amount;
-        return this.api_call('place_order', param, 1, couple);
-        //TODO: response normalizer and exception check will be here
+        let result = await this.api_call('place_order', param, 1, couple);
+        return this.normalizer(type, result);
     }
 
-    normalizer(response_type,data){
-        //TODO: response normalizer, fills a structured response for givin data input and returns back, provides compatibility for multiple markets on services
+    normalizer(type, data){
+
+        if (data.error !== undefined) {
+            return {'error': true};
+        } else {
+
+            if (type === 'buy') {
+                data.amount = data.symbol1Amount / 1000000;
+            }
+
+            data.order_id = data.id;
+            data.timestamp = time / 1000;
+
+            return data;
+        }
+    }
+
+    simulate_buy_sell(type, amount, couple) {
+
+        if (type === 'buy') {
+            return {
+                'error' : false,
+                'amount' : amount
+            }
+        } else {
+
+        }
     }
 
     convert(amount, couple) {

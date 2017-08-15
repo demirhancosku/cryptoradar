@@ -142,9 +142,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         if (config.app.env !== "simulation" && config.app.env !== "dev"){
             let result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
         }else{
-            let result = {
-                symbol1Amount: 0.1
-            }
+            let result = await market.class.simulate_buy('buy', buyPrice.toFixed(2), symbol);
         }
 
         //If buy request returns error
@@ -156,13 +154,13 @@ async function buy(account, market, symbol, resource, prices, last_price) {
             resource.update({
                 final_price: buyPrice,
                 final_state: 'sell',
-                amount: result.symbol1Amount / 1000000
+                amount: result.amount
             });
 
             /**
-             *  amount: result.symbol1Amount / 1000000
-             *  order_id: result.id
-             *  timestamp: result.time / 1000
+             *  amount:
+             *  order_id:
+             *  timestamp:
              */
 
 
@@ -197,9 +195,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         if (config.app.env !== "simulation" && config.app.env !== "dev"){
             let result = await market.class.buy_sell('sell', resource.amount, symbol);
         }else{
-            let result = {
-                symbol1Amount: 0.1
-            }
+            let result = market.class.simulate_buy_sell('sell', resource.amount, symbol);
         }
 
 
@@ -215,13 +211,13 @@ async function sell(account, market, symbol, resource, prices, last_price) {
             //TODO: Market log
             //TODO: Update resource
             /**
-             *  amount: result.symbol1Amount / 1000000
-             *  order_id: result.id
-             *  timestamp: result.time / 1000
+             *  amount:
+             *  order_id:
+             *  timestamp:
              */
 
 
-            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent "+ sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
