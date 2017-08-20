@@ -191,17 +191,17 @@ class Cexio {
         }
     }
 
-    simulate_buy_sell(type, amount, couple) {
+    simulate_buy_sell(type, amount, couple, amount2) {
 
         //TODO: simulate buy/sell will be check
         if (type === 'buy') {
             return {
-                'amount': amount,
+                'amount': amount2,
                 'order_id' : 0
             }
         } else {
             return {
-                'amount': amount,
+                'amount': amount2,
                 'order_id' : 0
             }
         }

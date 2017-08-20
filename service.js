@@ -150,7 +150,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         if (config.app.env !== "simulation" && config.app.env !== "dev") {
             result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
         } else {
-            result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol);
+            result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol, resource.amount);
         }
 
         //If buy request returns error
@@ -211,7 +211,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         if (config.app.env !== "simulation" && config.app.env !== "dev") {
             result = await market.class.buy_sell('sell', resource.amount, symbol);
         } else {
-            result = market.class.simulate_buy_sell('sell', resource.amount, symbol);
+            result = market.class.simulate_buy_sell('sell', resource.amount, symbol, resource.amount);
         }
 
 
