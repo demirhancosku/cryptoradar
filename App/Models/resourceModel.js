@@ -44,7 +44,9 @@ const Resource = orm.define(prefix+'resources', {
     smooth_period: Sequelize.INTEGER,
     forecast_count: Sequelize.INTEGER,
     sell_margin: Sequelize.FLOAT,
-    buy_margin: Sequelize.FLOAT
+    buy_margin: Sequelize.FLOAT,
+    short_period: Sequelize.INTEGER,
+    long_period: Sequelize.INTEGER
 },{
     updatedAt: 'updated_at',
     createdAt: 'created_at',

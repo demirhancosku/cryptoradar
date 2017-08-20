@@ -1,10 +1,9 @@
 /**
  * Created by erenyildirim on 13.08.2017.
  */
-const Indicator = require("./Indicator");
-TimeSeries = require("timeseries-analysis");
-const SimpleMA = require("technicalindicators").SMA;
-Logger = require('./App/Utils/Logger');
+const Indicator = require("./Indicator"),
+    TimeSeries = require("timeseries-analysis"),
+    SimpleMA = require("technicalindicators").SMA;
 
 class SMA extends Indicator {
 
@@ -12,10 +11,11 @@ class SMA extends Indicator {
         super();
 
         //To define calculations way; it is up for sell, down for buy action
-        this.isUp = operation === "up";
+        this.isSell = operation === "sell";
     };
 
-    calculate(shortPeriod, longPeriod){
+    calculate(){
+        firstPeriod = this.resource.short_period
         if(firstPeriod < (this.resource.wave_length - 3) && secondPeriod < (this.resource.wave_length - 2)) {
             const currentArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length));
             const pastArea = currentArea.data.slice(-this.resource.wave_length, -1);
@@ -32,7 +32,7 @@ class SMA extends Indicator {
                 const pastPastSMALong = SimpleMA.calculate({period: secondPeriod, values: pastPastArea});
 
                 if(pastPastSMAShort > pastPastSMALong){
-                    if(this.isUp){
+                    if(this.isSell){
                         if(currentSMAShort < currentSMALong){
                             return true;
                         }
@@ -40,7 +40,7 @@ class SMA extends Indicator {
                         return false;
                     }
                 } else if(pastPastSMAShort < pastPastSMALong){
-                    if(!this.isUp){
+                    if(!this.isSell){
                         if(currentSMAShort > currentSMALong){
                             return true;
                         }
@@ -50,7 +50,7 @@ class SMA extends Indicator {
                 }
             }
         } else {
-            Logger.error("The 'Resource Wave Length' is shorter than the period you want to analyze'");
+            this.log("The 'Resource Wave Length' is shorter than the period you want to analyze");
             return false;
         }
 
@@ -61,16 +61,17 @@ class SMA extends Indicator {
     update(data){
         this.timeseries = data.timeseries;
         this.resource = data.resource;
-        this.lastPrice = data.lastPrice;
 
         this.log('Wave Length: ' + this.resource.wave_length);
-        this.log('Last Price: ' + this.lastPrice);
     }
 
     advice(){
-
+        let advice = this.calculate();
+        this.log("Long period SMA and short period SMA are " + (advice ? "" : " not") + " the same. Resource should " + (advice ? "" : " not")  + " be " + (this.isSell ? "sold" : "bought") + "");
+        return advice;
     }
 
 
-
 }
+
+module.exports = SMA;
