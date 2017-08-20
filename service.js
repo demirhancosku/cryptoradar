@@ -51,8 +51,8 @@ async function init() {
 
 
     //Getting price history, order by timestamp
-    let prices = await PriceModel.scope('ether').findAll({
-        limit: 1000,
+    let prices = await PriceModel.findAll({
+        limit: 3000,
         order: [
             ['created_at', 'DESC']
         ]
@@ -92,17 +92,18 @@ async function router(accounts, prices) {
             //TODO: cache last prices for 10 second
             //TODO: make sure about multiple currency
             let lastPrices = await market.class.lastPrices(balance.symbol);
+            let balanceRelatedPrices = _.where(prices, {symbol:balance.symbol});
 
             //Resources associated with balances
             for (let resource of balance.resources) {
 
                 switch (resource.final_state) {
                     case 'buy':
-                        await buy(account, market, balance.symbol, resource, prices, lastPrices.ask);
+                        await buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask);
                         break;
 
                     case 'sell':
-                        await sell(account, market, balance.symbol, resource, prices, lastPrices.bid);
+                        await sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid);
                         break;
 
                     case 'close':
@@ -136,7 +137,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
 
 
-        Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$");
+        Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         //Send buy request to market
         //to prevent accident buy action
