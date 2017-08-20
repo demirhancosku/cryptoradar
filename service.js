@@ -90,6 +90,7 @@ async function router(accounts, prices) {
 
             // get last prices
             //TODO: cache last prices for 10 second
+            //TODO: make sure about multiple currency
             let lastPrices = await market.class.lastPrices(balance.symbol);
 
             //Resources associated with balances

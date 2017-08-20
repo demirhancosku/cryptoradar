@@ -11,6 +11,9 @@ const Markets = orm.define(prefix+'markets', {
         primaryKey: true
     },
     title: Sequelize.STRING,
+    default_hashed_special_key: Sequelize.STRING,
+    default_hashed_secret_key: Sequelize.STRING,
+    default_hashed_username: Sequelize.STRING,
     status: Sequelize.BOOLEAN,
     transaction_fee: Sequelize.FLOAT
 },{

@@ -12,6 +12,7 @@ const Prices = orm.define(prefix+'prices', {
     },
     symbol: Sequelize.STRING,
     timestamp: Sequelize.INTEGER,
+    market_id: Sequelize.INTEGER,
     ask: Sequelize.FLOAT,
     bid: Sequelize.FLOAT,
 },{
@@ -26,6 +27,11 @@ const Prices = orm.define(prefix+'prices', {
         bitcoin: {
             where: {
                 symbol: 'BTC/USD'
+            }
+        },
+        bitcoincash: {
+            where: {
+                symbol: 'BCH/USD'
             }
         }
     }

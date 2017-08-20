@@ -216,6 +216,10 @@ class Cexio {
         //TODO: response normalizer
         return {ask: result.ask, bid: result.bid}
     }
+
+    multiSymbol(couples) {
+        return this.api_call('tickers', {}, 0, couples);
+    }
 }
 
 module.exports = new Cexio;
