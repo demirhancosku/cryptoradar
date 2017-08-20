@@ -1,9 +1,10 @@
 /**
  * Created by erenyildirim on 13.08.2017.
  */
-const Indicator = require("./Indicator"),
-    TimeSeries = require("timeseries-analysis");
-    const SMA = require("technicalindicators").SMA;
+const Indicator = require("./Indicator");
+TimeSeries = require("timeseries-analysis");
+const SimpleMA = require("technicalindicators").SMA;
+Logger = require('./App/Utils/Logger');
 
 class SMA extends Indicator {
 
@@ -15,14 +16,45 @@ class SMA extends Indicator {
     };
 
     calculate(shortPeriod, longPeriod){
-        const selectedArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length));
+        if(firstPeriod < (this.resource.wave_length - 3) && secondPeriod < (this.resource.wave_length - 2)) {
+            const currentArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length));
+            const pastArea = currentArea.data.slice(-this.resource.wave_length, -1);
+            const pastPastArea = currentArea.data.slice(-this.resource.wave_length, -2);
 
-        const smashort = SMA.calculate({period: firstPeriod, values: selectedArea.data});
-        const smalong = SMA.calculate({period: secondPeriod, values: selectedArea.data});
+            const currentSMAShort = SimpleMA.calculate({period: firstPeriod, values: currentArea});
+            const currentSMALong = SimpleMA.calculate({period: firstPeriod, values: currentArea});
 
-        if(this.isUp){
-            return smashort
+            const pastSMAShort = SimpleMA.calculate({period: firstPeriod, values: pastArea});
+            const pastSMALong = SimpleMA.calculate({period: secondPeriod, values: pastArea});
+
+            if(pastSMAShort === pastSMALong){
+                const pastPastSMAShort = SimpleMA.calculate({period: firstPeriod, values: pastPastArea});
+                const pastPastSMALong = SimpleMA.calculate({period: secondPeriod, values: pastPastArea});
+
+                if(pastPastSMAShort > pastPastSMALong){
+                    if(this.isUp){
+                        if(currentSMAShort < currentSMALong){
+                            return true;
+                        }
+                    }else {
+                        return false;
+                    }
+                } else if(pastPastSMAShort < pastPastSMALong){
+                    if(!this.isUp){
+                        if(currentSMAShort > currentSMALong){
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            Logger.error("The 'Resource Wave Length' is shorter than the period you want to analyze'");
+            return false;
         }
+
+
 
     }
 
