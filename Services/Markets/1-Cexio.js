@@ -196,11 +196,13 @@ class Cexio {
         //TODO: simulate buy/sell will be check
         if (type === 'buy') {
             return {
-                'amount': amount
+                'amount': amount,
+                'order_id' : 0
             }
         } else {
             return {
-                'amount': amount
+                'amount': amount,
+                'order_id' : 0
             }
         }
     }

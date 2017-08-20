@@ -9,6 +9,7 @@ const config = require('./config'),
     BalanceModel = require('./App/Models/balanceModel'),
     ResourceModel = require('./App/Models/resourceModel'),
     MarketModel = require('./App/Models/marketModel'),
+    MarketLogModel = require('./App/Models/marketLogModel'),
     StrategyModel = require('./App/Models/strategyModel'),
     PriceModel = require('./App/Models/priceModel'),
     Logger = require('./App/Utils/Logger');
@@ -92,7 +93,7 @@ async function router(accounts, prices) {
             //TODO: cache last prices for 10 second
             //TODO: make sure about multiple currency
             let lastPrices = await market.class.lastPrices(balance.symbol);
-            let balanceRelatedPrices = _.where(prices, {symbol:balance.symbol});
+            let balanceRelatedPrices = _.where(prices, {symbol: balance.symbol});
 
             //Resources associated with balances
             for (let resource of balance.resources) {
@@ -114,6 +115,8 @@ async function router(accounts, prices) {
 
                 //process.exit(0);
             }
+
+            Logger.info(' \n');
 
         }
 
@@ -154,7 +157,15 @@ async function buy(account, market, symbol, resource, prices, last_price) {
             Logger.error("Something went wrong during the purchase.", account, result);
         } else {
 
-            //TODO: Market log
+            MarketLogModel.create({
+                resource_id: resource.id,
+                market_id: market.id,
+                order_id: result.order_id,
+                amount: result.amount,
+                value: buyPrice,
+                symbol: symbol
+            });
+
             resource.update({
                 final_price: buyPrice,
                 final_state: 'sell',
@@ -192,7 +203,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
 
 
-        Logger.buy('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+        Logger.sell('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         //Send sell request to market
         //to prevent accident sell action
@@ -211,7 +222,15 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         } else {
 
 
-            //TODO: Market log
+            MarketLogModel.create({
+                resource_id: resource.id,
+                market_id: market.id,
+                order_id: result.order_id,
+                amount: resource.amount,
+                value: sellPrice,
+                symbol: symbol
+            });
+
             //TODO: Update resource
             resource.update({
                 final_price: sellPrice,
@@ -224,7 +243,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.buy('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+            Logger.sell('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
