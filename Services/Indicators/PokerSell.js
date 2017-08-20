@@ -28,8 +28,6 @@ class PokerSell extends Indicator {
 
         }
 
-        console.log(resourceState);
-
         if(resourceState.before !== null && resourceState.before > resourceState.last && resourceState.last > resourceState.sell_price){
             advice = true;
         }
