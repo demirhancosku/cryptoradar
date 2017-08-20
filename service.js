@@ -33,11 +33,13 @@ async function init() {
                         include: [
                             {
                                 model: StrategyModel,
-                                as: 'buyStrategy'
+                                as: 'buyStrategy',
+                                foreignKey: 'buy_strategy_id'
                             },
                             {
                                 model: StrategyModel,
-                                as: 'sellStrategy'
+                                as: 'sellStrategy',
+                                foreignKey: 'sell_strategy_id'
                             }
                         ],
                         as: 'resources'
@@ -140,7 +142,6 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
 
 
-        Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         //Send buy request to market
         //to prevent accident buy action
@@ -202,8 +203,6 @@ async function sell(account, market, symbol, resource, prices, last_price) {
         // Adding transaction fee
         sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
 
-
-        Logger.sell('Sell has been completed. \n Ether Amount:' + resource.amount + "\n" + " Getting " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         //Send sell request to market
         //to prevent accident sell action

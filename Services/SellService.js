@@ -5,6 +5,7 @@
 "use strict";
 const BaseService = require('./BaseService'),
     PromiseBased = require("./Strategies/PromiseBased"),
+    PokerSellBased = require("./Strategies/PokerSellBased"),
     TimeSeries = require("timeseries-analysis");
 
 class SellService extends BaseService {
@@ -15,12 +16,14 @@ class SellService extends BaseService {
         //Collection of strategies related to sell action
         this.strategies = [];
         this.strategies.push({class_name: 'promiseBasedSellStrategy', class: new PromiseBased("sell")});
+        this.strategies.push({class_name: 'pokerBasedSellStrategy', class: new PokerSellBased()});
     }
 
     update(resource, prices, lastPrice) {
+
         for (let strategy of this.strategies) {
 
-            if (strategy.class_name === resource.buyStrategy.class_name) {
+            if (strategy.class_name === resource.sellStrategy.class_name) {
 
                 strategy.class.update(
                     {
