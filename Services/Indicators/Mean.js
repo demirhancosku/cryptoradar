@@ -41,7 +41,7 @@ class Mean extends Indicator {
 
     advice() {
         let advice = this.calculate();
-        this.log("Last price is " + (this.isUp ? "bigger" : "smaller") + " than mean:" + (advice ? " possitive" : " negative"));
+        this.log("Last price is " + (this.isUp ? "bigger" : "smaller") + " than mean:" + (advice ? " positive" : " negative"));
         return advice;
     }
 

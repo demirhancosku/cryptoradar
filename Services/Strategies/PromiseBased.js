@@ -3,7 +3,8 @@
 const Strategy = require("./Strategy"),
     DeepPeakPromise = require("../Indicators/DeepPeakPromise"),
     Margin = require("../Indicators/Margin"),
-    Mean = require("../Indicators/Mean");
+    Mean = require("../Indicators/Mean"),
+    SMA = require("../Indicators/SMA");
 
 class PromiseBased extends Strategy {
 
@@ -15,6 +16,7 @@ class PromiseBased extends Strategy {
 
     init() {
         this.add(new Mean(this.action === "buy" ? "down" : "up"));
+        this.add(new SMA(this.action === "buy" ? "buy" : "sell"));
         this.add(new DeepPeakPromise(this.action === "buy" ? "deep" : "peak"));
 
         if (this.action !== "buy") {
