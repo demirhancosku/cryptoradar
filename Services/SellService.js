@@ -12,9 +12,9 @@ class SellService extends BaseService {
     constructor() {
         super();
 
-        //Collection of strategies related to buy action
+        //Collection of strategies related to sell action
         this.strategies = [];
-        this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("sell")});
+        this.strategies.push({class_name: 'promiseBasedSellStrategy', class: new PromiseBased("sell")});
     }
 
     update(resource, prices, lastPrice) {

@@ -25,7 +25,8 @@
     "restify": "^5.1.0",
     "sequelize": "^4.4.7",
     "timeseries-analysis": "^1.0.12",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "technicalindicators": "^1.0.18"
   },
   "devDependencies": {}
 }
