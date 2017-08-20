@@ -11,7 +11,7 @@ See [GitHub Projects](https://github.com/demirhancosku/ETH-Trader-CEX.io/project
 
 ## License
 
-Apache 2.0, for further details, please see [LICENSE](LICENSE) file
+GPL-3.0+, for further details, please see [LICENSE](LICENSE) file
 
 ## Contributing
 
