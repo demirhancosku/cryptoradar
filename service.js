@@ -270,7 +270,7 @@ async function run() {
         //We will execute run again after 10 second including this one's execution time
         let execution_time = run_completed - run_start;
 
-        Logger.info('This run took ' + execution_time + ' milisecond, next one will start after ' + (10000 - execution_time ) + ' milisecond');
+        Logger.info('This run took ' + execution_time + ' miliseconds, next one will start after ' + (10000 - execution_time ) + ' miliseconds');
         setTimeout(() => {
             Logger.info('\n');
             try {
