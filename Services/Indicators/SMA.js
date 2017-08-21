@@ -15,7 +15,9 @@ class SMA extends Indicator {
     };
 
     calculate(){
-        firstPeriod = this.resource.short_period
+        let firstPeriod = this.resource.short_period;
+        let secondPeriod = this.resource.long_period;
+
         if(firstPeriod < (this.resource.wave_length - 3) && secondPeriod < (this.resource.wave_length - 2)) {
             const currentArea = new TimeSeries.main(this.timeseries.data.slice(-this.resource.wave_length));
             const pastArea = currentArea.data.slice(-this.resource.wave_length, -1);

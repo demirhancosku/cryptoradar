@@ -16,7 +16,9 @@ class PromiseBased extends Strategy {
 
     init() {
         this.add(new Mean(this.action === "buy" ? "down" : "up"));
-        this.add(new SMA(this.action === "buy" ? "buy" : "sell"));
+
+        //TODO: this SMA must be removed from here, It needs a new strategy for itself
+        //this.add(new SMA(this.action === "buy" ? "buy" : "sell"));
         this.add(new DeepPeakPromise(this.action === "buy" ? "deep" : "peak"));
 
         if (this.action !== "buy") {

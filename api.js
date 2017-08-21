@@ -5,7 +5,6 @@ const config = require('./config'),
     restify = require('restify'),
     jwt = require('jsonwebtoken'),
     ErrorResponse = require('./App/Responses/ErrorResponse'),
-    ExampleService = require('./Services/ExampleService'),
     Logger = require("./App/Utils/Logger");
 
 
@@ -31,6 +30,7 @@ global.server.use((request, response, next) => {
     global.user = null;
     if (request.query.token !== undefined) {
         try {
+            //TODO: the token must be contain users data
             global.user = jwt.verify(request.query.token, config.api.secret_key);
         } catch (err) {
             let res = new ErrorResponse(response);

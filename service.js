@@ -88,7 +88,7 @@ async function router(accounts, prices) {
 
             market.transaction_fee = balance.market.transaction_fee;
 
-            // init market from balance market informations
+            // init market from balance market information
             market.class.init(balance.hashed_username, balance.hashed_special_key, balance.hashed_secret_key);
 
             // get last prices
@@ -168,7 +168,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
             });
 
             resource.update({
-                final_price: buyPrice,
+                final_price: last_price,
                 final_state: 'sell',
                 amount: result.amount
             });
@@ -180,7 +180,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.buy('Purchase has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+            Logger.buy(resource.title + 'Purchase has been completed. \n Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
@@ -232,7 +232,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
 
             //TODO: Update resource
             resource.update({
-                final_price: sellPrice,
+                final_price: last_price,
                 final_state: 'buy'
             });
             /**
@@ -242,7 +242,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
              */
 
 
-            Logger.sell('Sale has been completed. \n Ether Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
+            Logger.sell(resource.title +' Sale has been completed. \n Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
 
         }
 
