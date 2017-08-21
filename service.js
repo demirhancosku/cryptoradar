@@ -70,7 +70,7 @@ async function init() {
 
 function selectMarket(balance) {
 
-    //Find markey by balance's market_id property
+    //Find market by balance's market_id property
     return _.findWhere(Markets, {id: balance.market_id.toString()});
 }
 
