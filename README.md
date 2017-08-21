@@ -1,8 +1,8 @@
-# [Ether Trader on CEX Market](https://github.com/demirhancosku/cryptoradar/ETH-Trader-CEX.io)
+# [cryptoradar](https://github.com/demirhancosku/cryptoradar)
 
 
 
-## What is the Ether Trader?
+## What is the cryptoradar?
 
 ## Usage
 
