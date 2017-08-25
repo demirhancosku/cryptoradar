@@ -1,4 +1,4 @@
-license{
+{
   "name": "ETH-Trader-CEX.io",
   "version": "0.0.1",
   "description": " ETHradar is a cyripto currency trading tool, it has own trading algorithms and it is also customizable.",
@@ -17,7 +17,7 @@ license{
   },
   "homepage": "https://github.com/demirhancosku/ETH-Trader-CEX.io#readme",
   "dependencies": {
-    
+ 
     "colors": "^1.1.2",
     "jsonwebtoken": "^7.4.2",
     "mysql2": "^1.4.0",
