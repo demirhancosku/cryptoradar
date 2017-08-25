@@ -17,7 +17,13 @@ const config = require('./config'),
 const buyService = new BuyService();
 const sellService = new SellService();
 
+
+var query = require('cli-interact').getYesNo;
+var answer = query('Is it true');
+console.log('you answered:', answer);
+
 async function init() {
+
 
     //Getting active accounts with balances and their resources and buy/sell strategies
     let accounts = await AccountsModel.scope(['active']).findAll({
@@ -131,7 +137,8 @@ async function buy(account, market, symbol, resource, prices, last_price) {
     //Get advice for buy action
     let advice = buyService.update(resource, prices, last_price);
 
-
+  
+    //deneme
     //buy if advice is true
     if (advice) {
 
@@ -164,7 +171,8 @@ async function buy(account, market, symbol, resource, prices, last_price) {
                 order_id: result.order_id,
                 amount: result.amount,
                 value: buyPrice,
-                symbol: symbol
+                symbol: symbol,
+                action:"buy"
             });
 
             resource.update({
@@ -192,7 +200,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
 
     //Get advice for sell action
     let advice = sellService.update(resource, prices, last_price);
-
+   
 
     //sell if advice is true
     if (advice) {
@@ -227,7 +235,8 @@ async function sell(account, market, symbol, resource, prices, last_price) {
                 order_id: result.order_id,
                 amount: resource.amount,
                 value: sellPrice,
-                symbol: symbol
+                symbol: symbol,
+                action:"sell"
             });
 
             //TODO: Update resource

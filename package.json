@@ -28,5 +28,7 @@
     "underscore": "^1.8.3",
     "technicalindicators": "^1.0.18"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "cli-interact": "^0.1.9"
+  }
 }
