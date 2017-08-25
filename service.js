@@ -18,9 +18,7 @@ const buyService = new BuyService();
 const sellService = new SellService();
 
 
-var query = require('cli-interact').getYesNo;
-var answer = query('Is it true');
-console.log('you answered:', answer);
+
 
 async function init() {
 
