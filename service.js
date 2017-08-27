@@ -17,7 +17,9 @@ const config = require('./config'),
 const buyService = new BuyService();
 const sellService = new SellService();
 
-
+var query = require('cli-interact').getYesNo;
+var answer = query('Is it true');
+console.log('you answered:', answer);
 
 
 async function init() {
@@ -130,18 +132,33 @@ async function router(accounts, prices) {
 
 }
 
+
 async function buy(account, market, symbol, resource, prices, last_price) {
 
-    //Get advice for buy action
+
+    var isOnSimullationMode = config.app.env == "simulation" || config.app.env == "dev";
+    var amount = resource.amount
+    if(isOnSimullationMode)
+    {
+        amount = calculateSimulationAmount(resource,last_price)
+    }
+
+
+    resource.update({
+        amount: amount
+
+    })
+        //Get advice for buy action
     let advice = buyService.update(resource, prices, last_price);
 
-  
+ 
     //deneme
     //buy if advice is true
     if (advice) {
 
+        
         //Calculating buy price
-        let buyPrice = parseFloat(resource.amount * last_price);
+        let buyPrice = parseFloat(amount * last_price);
 
         // Adding transaction fee
         buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
@@ -155,8 +172,9 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         if (config.app.env !== "simulation" && config.app.env !== "dev") {
             result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
         } else {
-            result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol, resource.amount);
+            result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol, amount);
         }
+
 
         //If buy request returns error
         if (result.error !== undefined) {
@@ -173,11 +191,20 @@ async function buy(account, market, symbol, resource, prices, last_price) {
                 action:"buy"
             });
 
+
+            var totalBalance = resource.demo_balance;
+            var newBalance = totalBalance - buyPrice                
+
+            
             resource.update({
                 final_price: last_price,
                 final_state: 'sell',
-                amount: result.amount
+                amount: result.amount,
+                demo_balance: newBalance
             });
+
+
+
 
             /**
              *  amount:
@@ -191,6 +218,12 @@ async function buy(account, market, symbol, resource, prices, last_price) {
         }
 
     }
+
+}
+
+function calculateSimulationAmount(resource,last_price)
+{
+    return (resource.demo_balance) / last_price
 
 }
 
@@ -237,10 +270,15 @@ async function sell(account, market, symbol, resource, prices, last_price) {
                 action:"sell"
             });
 
+
+            var totalBalance = resource.demo_balance;
+            var newBalance = totalBalance + sellPrice                
+
             //TODO: Update resource
             resource.update({
                 final_price: last_price,
-                final_state: 'buy'
+                final_state: 'buy',
+                demo_balance: newBalance
             });
             /**
              *  amount:
