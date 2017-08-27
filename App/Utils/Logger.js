@@ -6,13 +6,13 @@ const config = require("../../config"),
 
 class Logger {
 
-    static bot(account,markets) {
+    static bot(account) {
 
         if (this.bots === undefined)
             this.bots = [];
 
         if (this.bots[account.id] === undefined) {
-            this.bots[account.id] = new Telegram(account,markets);
+            this.bots[account.id] = new Telegram(account);
             //this.bots[account.id].listenForUser();
         }
 

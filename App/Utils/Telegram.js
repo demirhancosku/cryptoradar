@@ -6,10 +6,10 @@ const config = require('../../config');
 
 class Telegram{
 
-    constructor(account,markets) {
+    constructor(account) {
         this.account = account;
         this.bot = new telegramBot(this.account.bot_key, {polling: true});
-        this.markets = markets 
+
 
        
 
@@ -22,46 +22,6 @@ class Telegram{
     listenForUser(){
        
         this.bot.onText(/\/(.+)/, (msg, match)=>{
-    
-            const resp = match[1].split(' ');
-            switch(resp[0]) {
-                case "demo" :
-                   
-                    for (let balance of this.account.balances) {
-                    
-                        let market = this.markets
-                        var self = this;
-                        market.class.lastPrices(balance.symbol).then(function(result){
-                             
-                            
-                            for(let resource of balance.resources)
-                            {
-                                let demoBalance = resource.demo_balance
-                                let amount = resource.amount
-                                var totalAmount = demoBalance
-                                if(resource.final_state == "sell")
-                                {
-                                    var totalAmount = totalAmount +  amount * result.bid
-                                }
-
-                                var message = resource.title+' you have ' + demoBalance + ' demo balance if you sell all you have, you gonna have ' + totalAmount
-                               // console.log(message)
-                               console.log(message)
-                                self.sendMessage(message)
-                                
-
-                            }
-
-
-
-
-                        });
-                       
-                        
-                    }
-                    
-
-            }
 
         });
     }
