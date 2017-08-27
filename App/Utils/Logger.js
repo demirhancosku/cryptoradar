@@ -6,14 +6,14 @@ const config = require("../../config"),
 
 class Logger {
 
-    static bot(account) {
+    static bot(account,resources) {
 
         if (this.bots === undefined)
             this.bots = [];
 
         if (this.bots[account.id] === undefined) {
-            this.bots[account.id] = new Telegram(account);
-            //this.bots[account.id].listenForUser();
+            this.bots[account.id] = new Telegram(account,resources);
+            this.bots[account.id].listenForUser();
         }
 
         return this.bots[account.id];
@@ -54,7 +54,10 @@ class Logger {
 
     }
 
-
+    static setPrices(prices)
+    {
+        this.prices = prices
+    }
 
 
 

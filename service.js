@@ -14,12 +14,11 @@ const config = require('./config'),
     PriceModel = require('./App/Models/priceModel'),
     Logger = require('./App/Utils/Logger');
 
+
 const buyService = new BuyService();
 const sellService = new SellService();
 
-//var query = require('cli-interact').getYesNo;
-//var answer = query('Is it true');
-//console.log('you answered:', answer);
+
 
 
 async function init() {
@@ -103,8 +102,12 @@ async function router(accounts, prices) {
             let lastPrices = await market.class.lastPrices(balance.symbol);
             let balanceRelatedPrices = _.where(prices, {symbol: balance.symbol});
 
+            
+            Logger.bot(account,market);
             //Resources associated with balances
             for (let resource of balance.resources) {
+
+
 
                 switch (resource.final_state) {
                     case 'buy':
