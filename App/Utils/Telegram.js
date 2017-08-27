@@ -22,15 +22,15 @@ class Telegram{
     listenForUser(){
        
         this.bot.onText(/\/(.+)/, (msg, match)=>{
-            console.log('Sender:' + msg.from.id);
-            console.log('Message:' +  match[1]);
+    
             const resp = match[1].split(' ');
             switch(resp[0]) {
                 case "demo" :
-                    var self = this;
+                   
                     for (let balance of this.account.balances) {
                     
                         let market = this.markets
+                        var self = this;
                         market.class.lastPrices(balance.symbol).then(function(result){
                              
                             
@@ -45,7 +45,8 @@ class Telegram{
                                 }
 
                                 var message = resource.title+' you have ' + demoBalance + ' demo balance if you sell all you have, you gonna have ' + totalAmount
-                                console.log(message)
+                               // console.log(message)
+                               console.log(message)
                                 self.sendMessage(message)
                                 
 
@@ -70,7 +71,7 @@ class Telegram{
         this.bot.sendMessage(this.account.chat_id, str);
 
 
-        console.log(this.account.chat_id);
+        //console.log(this.account.chat_id);
     }
 
 
