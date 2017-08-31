@@ -164,6 +164,7 @@ async function buy(account, market, symbol, resource, prices, last_price) {
                 order_id: result.order_id,
                 amount: result.amount,
                 value: buyPrice,
+                action: 'buy',
                 symbol: symbol
             });
 
@@ -227,6 +228,7 @@ async function sell(account, market, symbol, resource, prices, last_price) {
                 order_id: result.order_id,
                 amount: resource.amount,
                 value: sellPrice,
+                action: 'sell',
                 symbol: symbol
             });
 
