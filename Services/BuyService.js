@@ -5,6 +5,7 @@
 "use strict";
 const BaseService = require('./BaseService'),
     PromiseBased = require("./Strategies/PromiseBased"),
+    MarginlessPromiseBased = require("./Strategies/MarginlessPromiseBased"),
     TimeSeries = require("timeseries-analysis");
 
 class BuyService extends BaseService {
@@ -15,6 +16,7 @@ class BuyService extends BaseService {
         //Collection of strategies related to buy action
         this.strategies = [];
         this.strategies.push({class_name: 'promiseBasedBuyStrategy', class: new PromiseBased("buy")});
+        this.strategies.push({class_name: 'marginlessPromiseBasedBuyStrategy', class: new MarginlessPromiseBased("buy")});
     }
 
     update(resource, prices, lastPrice) {
