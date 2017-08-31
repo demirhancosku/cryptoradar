@@ -51,7 +51,6 @@ class Logger {
     static info(str) {
         this.devlog(str, 'blue');
         this.simulationlog(str, 'blue');
-
     }
 
 

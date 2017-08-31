@@ -35,6 +35,7 @@ class Mean extends Indicator {
         this.resource = data.resource;
         this.lastPrice = data.lastPrice;
 
+        this.log('Resource Name: ' + this.resource.title);
         this.log('Wave Lenght: ' + this.resource.wave_length);
         this.log('Last Price: ' + this.lastPrice);
     }
