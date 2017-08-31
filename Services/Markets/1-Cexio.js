@@ -43,7 +43,7 @@ class Cexio {
 
     __nonce() //Get timestamp as nonce
     {
-        this._nonce = Math.round(new Date().getTime() / 100000) + Math.floor(Math.random() * 100);
+        this._nonce = Math.round(new Date().getTime() / 1000);
     }
 
 
@@ -177,7 +177,7 @@ class Cexio {
     normalizer(type, data) {
 
         if (data.error !== undefined) {
-            return {'error': true};
+            return {'error': true, data: data};
         } else {
 
             if (type === 'buy') {

@@ -30,6 +30,7 @@ class Logger {
         //TODO: File log will be here
 
         this.bot(account).sendMessage(str);
+        this.bot(account).sendMessage(JSON.stringify(data));
     }
 
     static db(str, account) {
