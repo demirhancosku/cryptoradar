@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/demirhancosku/ETH-Trader-CEX.io#readme",
   "dependencies": {
-    "bcrypt": "^1.0.2",
+ 
     "colors": "^1.1.2",
     "jsonwebtoken": "^7.4.2",
     "mysql2": "^1.4.0",
@@ -29,5 +29,7 @@
     "timeseries-analysis": "^1.0.12",
     "underscore": "^1.8.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "cli-interact": "^0.1.9"
+  }
 }

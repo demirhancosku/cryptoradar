@@ -29,7 +29,9 @@ const Balance = orm.define(prefix+'market_logs', {
     order_id: Sequelize.INTEGER,
     amount: Sequelize.FLOAT,
     symbol: Sequelize.STRING,
-    value: Sequelize.FLOAT
+    value: Sequelize.FLOAT,
+    action :Sequelize.STRING
+
 }, {
     updatedAt: 'updated_at',
     createdAt: 'created_at',
