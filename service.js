@@ -3,7 +3,7 @@
 const config = require('./config'),
 _ = require('underscore'),
 Markets = require('./Services/Markets/Markets'),
-TraderObject = require('./Trader/Trader'),
+TraderObject = require('./Trader'),
 AccountsModel = require('./App/Models/accountModel'),
 BalanceModel = require('./App/Models/balanceModel'),
 ResourceModel = require('./App/Models/resourceModel'),
@@ -75,7 +75,7 @@ async function router(accounts, prices) {
 
     // We will check all active accounts
     for (let account of accounts) {
-        Logger.bot(account,Trader)
+        Logger.bot(account,Trader);
 
         //Balances associated with account
         for (let balance of account.balances) {
