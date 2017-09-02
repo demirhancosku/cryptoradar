@@ -46,6 +46,12 @@ class Telegram{
                 break;
                 case "listresources":
                     self.Trader.listResources(self.account.id)
+                case "closealarm":
+                    if (resp.length > 1) {
+                        var alarmId = resp[1]
+                        self.Trader.closeAlarm(alarmId)
+                    }
+                    break
 
 
 

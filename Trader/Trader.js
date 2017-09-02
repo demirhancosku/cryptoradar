@@ -7,6 +7,7 @@ const config = require('../config'),
     AccountsModel = require('../App/Models/accountModel'),
     BalanceModel = require('../App/Models/balanceModel'),
     ResourceModel = require('../App/Models/resourceModel'),
+    AlarmModel = require('../App/Models/alarmModel'),
     MarketModel = require('../App/Models/marketModel'),
     MarketLogModel = require('../App/Models/marketLogModel'),
     StrategyModel = require('../App/Models/strategyModel'),
@@ -300,6 +301,21 @@ class Trader {
         else if (resource.final_state == "sell")
             await this.sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid, false);
 
+    }
+
+    async closeAlarm(alarmId)
+    {
+        //TODO check alarm blongs to user
+        let alarms = AlarmModel.findAll({
+            where:{
+                id : alarmId
+            }
+        })
+
+        let alarm = alarms[0]
+        alarm.update({
+            status:0
+        })
     }
 
 
