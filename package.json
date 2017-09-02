@@ -23,10 +23,11 @@
     "mysql2": "^1.4.0",
     "node-telegram-bot-api": "^0.27.1",
     "restify": "^5.1.0",
-    "sequelize": "^4.4.7",
+    "sequelize": "^4.6.0",
+    "sequelize-cli": "^2.8.0",
+    "technicalindicators": "^1.0.18",
     "timeseries-analysis": "^1.0.12",
-    "underscore": "^1.8.3",
-    "technicalindicators": "^1.0.18"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "cli-interact": "^0.1.9"

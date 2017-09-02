@@ -33,6 +33,7 @@ class Logger {
         //TODO: File log will be here
 
         this.bot(account).sendMessage(str);
+        this.bot(account).sendMessage(JSON.stringify(data));
     }
 
     static db(str, account) {
@@ -57,7 +58,6 @@ class Logger {
     static info(str) {
         this.devlog(str, 'blue');
         this.simulationlog(str, 'blue');
-
     }
 
     static botInfo(str) {

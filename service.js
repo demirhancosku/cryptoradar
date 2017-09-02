@@ -53,6 +53,7 @@ async function init() {
         }]
     });
 
+    //TODO: divide prices by market_id
     //Getting price history, order by timestamp
     let prices = await PriceModel.findAll({
         limit: 3000,
@@ -91,9 +92,12 @@ async function router(accounts, prices) {
             //TODO: cache last prices for 10 second
             //TODO: make sure about multiple currency
             let lastPrices = await market.class.lastPrices(balance.symbol);
-            let balanceRelatedPrices = _.where(prices, {
-                symbol: balance.symbol
-            });
+
+            Logger.info('Last Ask Price: ' + lastPrices.ask);
+            Logger.info('Last Bid Price: ' + lastPrices.bid);
+            Logger.info('\n');
+
+            let balanceRelatedPrices = _.where(prices, {symbol: balance.symbol});
 
             //Resources associated with balances
             for (let resource of balance.resources) {
@@ -116,6 +120,7 @@ async function router(accounts, prices) {
                     }
 
                 //process.exit(0);
+                Logger.info(' \n');
             }
 
             Logger.info(' \n');
@@ -125,9 +130,6 @@ async function router(accounts, prices) {
     }
 
 }
-
-
-
 
 
 

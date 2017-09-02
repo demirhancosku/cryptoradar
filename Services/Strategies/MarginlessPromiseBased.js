@@ -2,11 +2,9 @@
 
 const Strategy = require("./Strategy"),
     DeepPeakPromise = require("../Indicators/DeepPeakPromise"),
-    Margin = require("../Indicators/Margin"),
-    Mean = require("../Indicators/Mean"),
-    SMA = require("../Indicators/SMA");
+    Mean = require("../Indicators/Mean");
 
-class PromiseBased extends Strategy {
+class MarginlessPromiseBased extends Strategy {
 
     constructor(action) {
         super();
@@ -16,12 +14,7 @@ class PromiseBased extends Strategy {
 
     init() {
         this.add(new Mean(this.action === "buy" ? "down" : "up"));
-
-        //TODO: this SMA must be removed from here, It needs a new strategy for itself
-        //this.add(new SMA(this.action === "buy" ? "buy" : "sell"));
         this.add(new DeepPeakPromise(this.action === "buy" ? "deep" : "peak"));
-        this.add(new Margin(this.action));
-
     }
 
     update(data) {
@@ -34,4 +27,4 @@ class PromiseBased extends Strategy {
 
 }
 
-module.exports = PromiseBased;
+module.exports = MarginlessPromiseBased;
