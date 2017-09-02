@@ -1,19 +1,22 @@
 "use strict";
 const config = require("../../config"),
     Colors = require("colors/safe"),
+    BotUtils = require("./BotUtils"),
     Telegram = require("./Telegram");
+
 
 
 class Logger {
 
-    static bot(account) {
+    static bot(account,trader) {
 
         if (this.bots === undefined)
             this.bots = [];
 
         if (this.bots[account.id] === undefined) {
-            this.bots[account.id] = new Telegram(account);
-            //this.bots[account.id].listenForUser();
+           
+            this.bots[account.id] = new Telegram(account,trader);
+            this.bots[account.id].listenForUser();
         }
 
         return this.bots[account.id];
@@ -48,9 +51,18 @@ class Logger {
         this.bot(account).sendMessage(str);
     }
 
+
+
+
     static info(str) {
         this.devlog(str, 'blue');
         this.simulationlog(str, 'blue');
+
+    }
+
+    static botInfo(str) {
+        this.devlog(str, 'red');
+        this.simulationlog(str, 'red');
 
     }
 
@@ -70,6 +82,14 @@ class Logger {
         if (config.app.env === "simulation")
             console.log(Colors[color](str));
     }
+
+    static alarm(checkResult,account,alarm,resource) {
+
+        this.bot(account).sendMessage(BotUtils.createAlarmMessage(checkResult,resource,alarm));
+    }
+
+
+   
 }
 
 module.exports = Logger;

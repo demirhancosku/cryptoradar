@@ -3,98 +3,36 @@
 const config = require('./config'),
 _ = require('underscore'),
 Markets = require('./Services/Markets/Markets'),
-BuyService = require('./Services/BuyService'),
-SellService = require('./Services/SellService'),
+TraderObject = require('./Trader/Trader'),
 AccountsModel = require('./App/Models/accountModel'),
 BalanceModel = require('./App/Models/balanceModel'),
 ResourceModel = require('./App/Models/resourceModel'),
 MarketModel = require('./App/Models/marketModel'),
-MarketLogModel = require('./App/Models/marketLogModel'),
 StrategyModel = require('./App/Models/strategyModel'),
 PriceModel = require('./App/Models/priceModel'),
 Logger = require('./App/Utils/Logger');
 
 
-const buyService = new BuyService();
-const sellService = new SellService();
 
-
-var isBotEnabled = false;
+let Trader = new TraderObject();
 
 async function init() {
 
 
-//Getting active accounts with balances and their resources and buy/sell strategies
-let accounts = await AccountsModel.scope(['active']).findAll({
-    include: [
-    {
-        model: BalanceModel,
-        as: 'balances',
-        where: {status: 1},
-        include: [
-        {
-            model: ResourceModel,
-            where: {status: 1},
-            include: [
-            {
-                model: StrategyModel,
-                as: 'buyStrategy',
-                foreignKey: 'buy_strategy_id'
-            },
-            {
-                model: StrategyModel,
-                as: 'sellStrategy',
-                foreignKey: 'sell_strategy_id'
-            }
-            ],
-            as: 'resources'
-        },
-        {
-            model: MarketModel,
-            as: 'market'
-        }]
-    }
-    ]
-});
-
-
-//Getting price history, order by timestamp
-let prices = await PriceModel.findAll({
-    limit: 3000,
-    order: [
-    ['created_at', 'DESC']
-    ]
-});
-
-//Get Plain Objects into prices
-prices = prices.map((price) => price.get({plain: true})).reverse();
-
-
-return [accounts, prices];
-}
-
-function selectMarket(balance) {
-
-//Find market by balance's market_id property
-return _.findWhere(Markets, {id: balance.market_id.toString()});
-}
-
-
-async function getAccounts()
-{
-
+    //Getting active accounts with balances and their resources and buy/sell strategies
     let accounts = await AccountsModel.scope(['active']).findAll({
-        include: [
-        {
+        include: [{
             model: BalanceModel,
             as: 'balances',
-            where: {status: 1},
-            include: [
-            {
+            where: {
+                status: 1
+            },
+            include: [{
                 model: ResourceModel,
-                where: {status: 1},
-                include: [
-                {
+                where: {
+                    status: 1
+                },
+                include: [{
                     model: StrategyModel,
                     as: 'buyStrategy',
                     foreignKey: 'buy_strategy_id'
@@ -110,337 +48,125 @@ async function getAccounts()
             {
                 model: MarketModel,
                 as: 'market'
-            }]
-        }
+            }
+            ]
+        }]
+    });
+
+    //Getting price history, order by timestamp
+    let prices = await PriceModel.findAll({
+        limit: 3000,
+        order: [
+        ['created_at', 'DESC']
         ]
     });
 
-    return accounts
-}
-
-async function initBot(accountModel)
-{
-
-    if(isBotEnabled)
-        return;
-
-    isBotEnabled = true
-    let bot = Logger.bot(accountModel).bot
-    var self = this
-    bot.onText(/\/(.+)/, (msg, match)=>{
-
-        const chatId = msg.chat.id;
-        //const resp = match[1].split(' ');
-        const resp = match[1].split(' ');
-        switch(resp[0]) {
-            case "demo" :
-            console.log("MESSAGE RECEIVED "+resp[0])
-            sendDemoBalance();
-            break;
-            
+    //Get Plain Objects into prices
+    prices = prices.map((price) => price.get({
+        plain: true
+    })).reverse();
 
 
-
-        }
-
-    });
-
-}
-
-async function sendDemoBalance()
-{
-
-    var accounts = await getAccounts()
-
-
-
-
-    for(let account of accounts)
-    {
-
-       for (let balance of account.balances) {
-        var market = selectMarket(balance)
-        market.class.lastPrices(balance.symbol).then(function(result){
-
-
-            for(let resource of balance.resources)
-            {
-                let demoBalance = resource.demo_balance
-                let amount = resource.amount
-                var totalAmount = demoBalance
-                if(resource.final_state == "sell")
-                {
-                    var totalAmount = totalAmount +  amount * result.bid
-                }
-
-                var message = resource.title+' you have ' + demoBalance + ' demo balance if you sell all you have, you gonna have ' + totalAmount
-                           // console.log(message)
-                           console.log(message)
-                           Logger.bot(account).sendMessage(message)
-
-
-                       }
-
-
-
-
-                   });
-
-
-    }
-}
+    return [accounts, prices];
 }
 
 async function router(accounts, prices) {
 
-// We will check all active accounts
-for (let account of accounts) {
-    initBot(account)
+    // We will check all active accounts
+    for (let account of accounts) {
+        Logger.bot(account,Trader)
 
-    //Balances associated with account
-    for (let balance of account.balances) {
+        //Balances associated with account
+        for (let balance of account.balances) {
 
-        // select correct market for balance
-        let market = selectMarket(balance);
+            // select correct market for balance
+            let market = Trader.selectMarket(balance);
 
-        market.transaction_fee = balance.market.transaction_fee;
+            market.transaction_fee = balance.market.transaction_fee;
 
-        // init market from balance market information
-        market.class.init(balance.hashed_username, balance.hashed_special_key, balance.hashed_secret_key);
+            // init market from balance market information
+            market.class.init(balance.hashed_username, balance.hashed_special_key, balance.hashed_secret_key);
 
-        // get last prices
-        //TODO: cache last prices for 10 second
-        //TODO: make sure about multiple currency
-        let lastPrices = await market.class.lastPrices(balance.symbol);
-        let balanceRelatedPrices = _.where(prices, {symbol: balance.symbol});
+            // get last prices
+            //TODO: cache last prices for 10 second
+            //TODO: make sure about multiple currency
+            let lastPrices = await market.class.lastPrices(balance.symbol);
+            let balanceRelatedPrices = _.where(prices, {
+                symbol: balance.symbol
+            });
 
-        
-        //Resources associated with balances
-        for (let resource of balance.resources) {
+            //Resources associated with balances
+            for (let resource of balance.resources) {
 
 
 
-            switch (resource.final_state) {
-                case 'buy':
-                await buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask);
-                break;
+                switch (resource.final_state) {
+                    case 'buy':
+                         await Trader.buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask,false);
+                        break;
 
-                case 'sell':
-                await sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid);
-                break;
+                        case 'sell':
+                            await Trader.sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid,false);
+                        break;
 
-                case 'close':
-                    //do nothing
-                    break;
-                    default:
-                }
+                        case 'close':
+                        //do nothing
+                        break;
+                        default:
+                    }
 
-            //process.exit(0);
+                //process.exit(0);
+            }
+
+            Logger.info(' \n');
+
         }
 
-        Logger.info(' \n');
-
     }
 
 }
 
-}
-
-
-async function buy(account, market, symbol, resource, prices, last_price) {
-
-
-    var isOnSimullationMode = config.app.env == "simulation" || config.app.env == "dev";
-    var amount = resource.amount
-    if(isOnSimullationMode)
-    {
-        amount = calculateSimulationAmount(resource,last_price)
-    }
-
-
-    resource.update({
-        amount: amount
-
-    })
-    //Get advice for buy action
-    let advice = buyService.update(resource, prices, last_price);
-
-
-//deneme
-//buy if advice is true
-if (advice) {
-
-
-    //Calculating buy price
-    let buyPrice = parseFloat(amount * last_price);
-
-    // Adding transaction fee
-    buyPrice += Math.round(buyPrice * market.transaction_fee / 10) / 100;
-
-
-
-    //Send buy request to market
-    //to prevent accident buy action
-    let result = {'error': true};
-
-    if (config.app.env !== "simulation" && config.app.env !== "dev") {
-        result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
-    } else {
-        result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol, amount);
-    }
-
-
-    //If buy request returns error
-    if (result.error !== undefined) {
-        Logger.error("Something went wrong during the purchase.", account, result);
-    } else {
-
-        MarketLogModel.create({
-            resource_id: resource.id,
-            market_id: market.id,
-            order_id: result.order_id,
-            amount: result.amount,
-            value: buyPrice,
-            symbol: symbol,
-            action:"buy"
-        });
-
-
-        var totalBalance = resource.demo_balance;
-        var newBalance = totalBalance - buyPrice                
-
-        
-        resource.update({
-            final_price: last_price,
-            final_state: 'sell',
-            amount: result.amount,
-            demo_balance: newBalance
-        });
 
 
 
 
-        /**
-         *  amount:
-         *  order_id:
-         *  timestamp:
-         */
 
 
-         Logger.buy(resource.title + 'Purchase has been completed. \n Amount:' + resource.amount + "\n" + " Spent " + buyPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
-
-     }
-
- }
-
-}
-
-function calculateSimulationAmount(resource,last_price)
-{
-    return (resource.demo_balance) / last_price
-
-}
-
-async function sell(account, market, symbol, resource, prices, last_price) {
-
-//Get advice for sell action
-let advice = sellService.update(resource, prices, last_price);
-
-
-//sell if advice is true
-if (advice) {
-
-    //Calculating sell price
-    let sellPrice = parseFloat(resource.amount * last_price);
-
-    // Adding transaction fee
-    sellPrice += Math.round(sellPrice * market.transaction_fee / 10) / 100;
-
-
-    //Send sell request to market
-    //to prevent accident sell action
-    let result = {'error': true};
-
-    if (config.app.env !== "simulation" && config.app.env !== "dev") {
-        result = await market.class.buy_sell('sell', resource.amount, symbol);
-    } else {
-        result = market.class.simulate_buy_sell('sell', resource.amount, symbol, resource.amount);
-    }
-
-
-    //If sell request return error
-    if (result.error !== undefined) {
-        Logger.error("Something went wrong during the sale.", account, result);
-    } else {
-
-
-        MarketLogModel.create({
-            resource_id: resource.id,
-            market_id: market.id,
-            order_id: result.order_id,
-            amount: resource.amount,
-            value: sellPrice,
-            symbol: symbol,
-            action:"sell"
-        });
-
-
-        var totalBalance = resource.demo_balance;
-        var newBalance = totalBalance + sellPrice                
-
-        //TODO: Update resource
-        resource.update({
-            final_price: last_price,
-            final_state: 'buy',
-            demo_balance: newBalance
-        });
-        /**
-         *  amount:
-         *  order_id:
-         *  timestamp:
-         */
-
-
-         Logger.sell(resource.title +' Sale has been completed. \n Amount:' + resource.amount + "\n" + " Spent " + sellPrice.toFixed(2) + "$ \n" + " Over " + last_price + "$", account);
-
-     }
-
- }
-}
 
 function stop() {
 
 }
 
 async function run() {
-//run start date for calculating execution time
-let run_start = +new Date();
+    //run start date for calculating execution time
+    let run_start = +new Date();
 
-//Firstly we will get accounts balances, resources and prices data
-let [accounts, prices] = await init();
+    //Firstly we will get accounts balances, resources and prices data
+    let [accounts, prices] = await init();
 
-//Then we'll pass all data to Router method. Router method redirects resources to relevant function.
-//If routing completed run again
-router(accounts, prices).then(() => {
+    //Then we'll pass all data to Router method. Router method redirects resources to relevant function.
+    //If routing completed run again
+    router(accounts, prices).then(() => {
 
-    //run stop date
-    let run_completed = +new Date();
+        //run stop date
+        let run_completed = +new Date();
 
-    //We will execute run again after 10 second including this one's execution time
-    let execution_time = run_completed - run_start;
+        //We will execute run again after 10 second including this one's execution time
+        let execution_time = run_completed - run_start;
 
-    Logger.info('This run took ' + execution_time + ' miliseconds, next one will start after ' + (10000 - execution_time ) + ' miliseconds');
-    setTimeout(() => {
-        Logger.info('\n');
-        try {
-            run();
-        } catch (error) {
-            console.error(error)
-        }
-    }, Math.abs(10000 - execution_time));
-});
+        Logger.info('This run took ' + execution_time + ' miliseconds, next one will start after ' + (10000 - execution_time) + ' miliseconds');
+        setTimeout(() => {
+            Logger.info('\n');
+            try {
+                run();
+            } catch (error) {
+                console.error(error)
+            }
+        }, Math.abs(10000 - execution_time));
+    });
 
 }
+
 
 
 run();

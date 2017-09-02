@@ -23,7 +23,7 @@ async function migrate() {
     await orm.query("CREATE TABLE IF NOT EXISTS "+prefix+"market_logs (id INTEGER PRIMARY KEY AUTO_INCREMENT, resource_id INTEGER(11), market_id INTEGER(11), order_id INTEGER(11), amount FLOAT, symbol VARCHAR(255), value FLOAT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY(resource_id) REFERENCES "+prefix+"resources (id), FOREIGN KEY(market_id) REFERENCES "+prefix+"markets (id))");
 
     await orm.query("CREATE TABLE IF NOT EXISTS "+prefix+"prices (id INTEGER PRIMARY KEY AUTO_INCREMENT, symbol VARCHAR(255), market_id INTEGER(11), ask FLOAT, bid FLOAT(11), timestamp INTEGER, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)");
-
+    await orm.query("CREATE TABLE IF NOT EXISTS "+prefix+"alarm ( `id` int(11) NOT NULL AUTO_INCREMENT, `resource_id` int(11) NOT NULL, `max` float DEFAULT NULL, `min` float DEFAULT NULL, `title` varchar(45) DEFAULT NULL, `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, `status` int(11) NOT NULL DEFAULT '0', `last_message_time` timestamp NULL DEFAULT NULL, PRIMARY KEY (`id`), KEY `fk_auyari_resourceId` (`resource_id`), CONSTRAINT `fk_uyari_resourceId` FOREIGN KEY (`resource_id`) REFERENCES `_resources` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1")
     return true;
 }
 

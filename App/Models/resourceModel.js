@@ -5,6 +5,7 @@
 "use strict";
 const [Sequelize,orm,prefix] = require('./db');
 const BalanceModel = require('./balanceModel');
+const AlarmModel = require('./alarmModel');
 const StrategyModel = require('./strategyModel');
 
 
@@ -65,11 +66,19 @@ const Resource = orm.define(prefix+'resources', {
                     model: StrategyModel
                 }
             ]
+        },
+        alarm :{
+            include:[
+                {
+                    model:AlarmModel
+                }
+            ]
         }
     }
 });
 
 Resource.belongsTo(StrategyModel, { as: 'buyStrategy', foreignKey: 'buy_strategy_id'});
 Resource.belongsTo(StrategyModel, { as: 'sellStrategy', foreignKey: 'sell_strategy_id'});
+Resource.hasMany(AlarmModel, {foreignKey: 'resource_id', as: 'alarms'});
 
 module.exports = Resource;
