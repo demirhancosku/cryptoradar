@@ -60,7 +60,7 @@ class Trader {
                 'error': true
             };
 
-            if (this.isOnSimulationMode) {
+            if (!this.isOnSimulationMode) {
                 result = await market.class.buy_sell('buy', buyPrice.toFixed(2), symbol);
             } else {
                 result = market.class.simulate_buy_sell('buy', buyPrice.toFixed(2), symbol, amount);
@@ -123,7 +123,7 @@ class Trader {
                 'error': true
             };
 
-            if (this.isOnSimulationMode) {
+            if (!this.isOnSimulationMode) {
                 result = await market.class.buy_sell('sell', resource.amount, symbol);
             } else {
                 result = market.class.simulate_buy_sell('sell', resource.amount, symbol, resource.amount);
