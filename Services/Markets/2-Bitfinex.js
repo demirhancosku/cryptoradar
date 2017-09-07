@@ -172,49 +172,35 @@ class Bitfinex {
 
 
     ticker(couple) {
-        return this.api_call('ticker', {}, 0, couple, "POST");
+
     }
 
     order_book(couple) {
-        return this.api_call('order_book', {}, 0, couple, "POST");
+
     }
 
     trade_history(since, couple) {
-        let param = {};
-        param.since = since;
-        return this.api_call('trade_history', param, 0, couple, "POST");
+
     }
 
     balance() {
-        let param = {};
-        return this.api_call('balance', param, 1, '', "POST");
+
     }
 
     open_orders(couple) {
-        return this.api_call('open_orders', {}, 1, couple, "POST");
+
     }
 
     cancel_order(id) {
-        let param = {};
-        param.id = id;
-        return this.api_call('cancel_order', param, 1, '', "POST");
+
     }
 
     place_order(type, amount, price, couple) {
-        let param = {};
-        param.type = type;
-        param.amount = amount;
-        param.price = price;
-        return this.api_call('place_order', param, 1, couple, "POST")
+
     }
 
     async buy_sell(type, amount, couple) {
-        let param = {};
-        param.type = type;
-        param.order_type = 'market';
-        param.amount = amount;
-        let result = await this.api_call('place_order', param, 1, couple, "POST");
-        return this.normalizer(type, result);
+
     }
 
     normalizer(type, data) {
@@ -251,9 +237,7 @@ class Bitfinex {
     }
 
     convert(amount, couple) {
-        let param = {};
-        param.amnt = amount;
-        return this.api_call('convert', param, 0, couple, "POST")
+
     }
 
     async lastPrices(symbol) {
