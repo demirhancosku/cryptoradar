@@ -171,7 +171,48 @@ class Trader {
     }
 
 
-    sendDemoBalance(account) {
+    async sendDemoBalance(a) {
+
+
+        let account = await AccountsModel.scope(['active']).findOne({
+
+            where: {
+                id: a.id
+            },
+
+            include: [{
+                model: BalanceModel,
+                as: 'balances',
+                where: {
+                    status: 1
+                },
+                include: [{
+                    model: ResourceModel,
+                    where: {
+                        status: 1,
+                    
+                    },
+                    include: [{
+                        model: StrategyModel,
+                        as: 'buyStrategy',
+                        foreignKey: 'buy_strategy_id'
+                    },
+                        {
+                            model: StrategyModel,
+                            as: 'sellStrategy',
+                            foreignKey: 'sell_strategy_id'
+                        }
+                    ],
+                    as: 'resources'
+                },
+                    {
+                        model: MarketModel,
+                        as: 'market'
+                    }
+                ]
+            }]
+        });
+
 
         for (let balance of account.balances) {
             let market = this.selectMarket(balance);
@@ -290,7 +331,7 @@ class Trader {
         if (resource.final_state === "buy")
             await this.buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask, true);
         else if (resource.final_state === "sell")
-            await this.sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid, false);
+            await this.sell(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.bid, true);
 
     }
 
