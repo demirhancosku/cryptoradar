@@ -190,7 +190,7 @@ class Trader {
                     model: ResourceModel,
                     where: {
                         status: 1,
-                    
+
                     },
                     include: [{
                         model: StrategyModel,
