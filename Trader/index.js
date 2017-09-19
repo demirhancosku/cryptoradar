@@ -89,7 +89,8 @@ class Trader {
                     final_price: last_price,
                     final_state: 'sell',
                     amount: result.amount,
-                    demo_balance: resource.demo_balance - buyPrice // new balance
+                    demo_balance: resource.demo_balance - buyPrice,
+                    pick_after_buy:last_price// new balance
                 });
 
 
@@ -149,6 +150,8 @@ class Trader {
 
                 let totalBalance = resource.demo_balance;
                 let newBalance = totalBalance + sellPrice;
+
+
 
                 //TODO: Update resource
                 resource.update({

@@ -97,16 +97,19 @@ async function router(accounts, prices) {
             Logger.info('Last Bid Price: ' + lastPrices.bid);
             Logger.info('\n');
 
+
             let balanceRelatedPrices = _.where(prices, {symbol: balance.symbol});
 
             //Resources associated with balances
             for (let resource of balance.resources) {
 
 
+                await updatePicValue(resource,lastPrices)
+
 
                 switch (resource.final_state) {
                     case 'buy':
-                         await Trader.buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask,false);
+                            await Trader.buy(account, market, balance.symbol, resource, balanceRelatedPrices, lastPrices.ask,false);
                         break;
 
                         case 'sell':
@@ -129,6 +132,16 @@ async function router(accounts, prices) {
 
     }
 
+}
+
+async function updatePicValue(resource,prices) {
+
+    if(prices.bid > resource.pick_after_buy)
+    {
+        await resource.update({
+            pick_after_buy: prices.bid
+        })
+    }
 }
 
 

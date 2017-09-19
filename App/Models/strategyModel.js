@@ -12,6 +12,7 @@ const Strategies = orm.define(prefix+'strategies', {
     },
     title: Sequelize.STRING,
     class_name: Sequelize.STRING,
+
 },{
     updatedAt: 'updated_at',
     createdAt: 'created_at'

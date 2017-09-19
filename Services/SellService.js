@@ -36,10 +36,22 @@ class SellService extends BaseService {
 
                     });
 
-                return strategy.class.check();
+
+
+
+                return strategy.class.check() || this.checkStopLoss(resource,prices,lastPrice);
             }
 
         }
+
+    }
+
+    checkStopLoss(resource,prices,lastPrice)
+    {
+        let stopLossVal = resource.stop_loss_price
+        let currentVal = resource.amount * lastPrice
+        let picVal = resource.pick_after_buy
+        return (Math.abs(picVal - currentVal) >= stopLossVal)
 
     }
 
