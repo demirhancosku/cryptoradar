@@ -50,7 +50,7 @@ class SellService extends BaseService {
     {
         let stopLossVal = resource.stop_loss_price
         let currentVal = resource.amount * lastPrice
-        let picVal = resource.pick_after_buy
+        let picVal = resource.pick_after_buy * resource.amount
         return (Math.abs(picVal - currentVal) >= stopLossVal)
 
     }
